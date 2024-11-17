@@ -1,0 +1,8 @@
+{
+	"files.associations": {
+		"*.qci": "qc",
+		"get_next_line.h": "c",
+		"stdlib.h": "c",
+		"stdint.h": "c"
+	}
+}

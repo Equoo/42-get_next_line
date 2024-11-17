@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dderny <dderny@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 18:17:33 by dderny            #+#    #+#             */
-/*   Updated: 2024/11/16 18:17:33 by dderny           ###   ########.fr       */
+/*   Updated: 2024/11/16 22:30:21 by dderny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,17 @@
 # define GET_NEXT_LINE_H
 # include <stdlib.h>
 # include <unistd.h>
+# include <stdint.h>
 
-char    *get_next_line(int fd);
+char	*get_next_line(int fd);
+
+void	*ft_calloc(size_t nmemb, size_t size);
+
+
+
+char	*ft_strjoin(char *s1, char *s2);
+size_t	ft_strlcpy(char *dest, const char *src, size_t n);
+size_t	ft_strlen(const char *str);
+size_t	ft_strlcat(char *dest, const char *src, size_t n);
 
 #endif
-
