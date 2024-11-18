@@ -6,13 +6,102 @@
 /*   By: dderny <dderny@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 18:17:33 by dderny            #+#    #+#             */
-/*   Updated: 2024/11/17 01:47:58 by dderny           ###   ########.fr       */
+/*   Updated: 2024/11/18 00:40:53 by dderny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <stdlib.h>
 #include <unistd.h>
+
+char	*get_next_line(int fd)
+{
+	static t_gnl_data	data;
+	char				*buffer;
+	size_t				len;
+
+	len = 0;
+	if (!fd)
+	{
+		if (*data.last)
+			return (get_last_line(&data));
+		else
+			len = get_next_line_stdin(&data, buffer);
+	}
+	else
+		len = get_next_line_file(fd, buffer);
+	if (!buffer[0] || data.fd_states[fd] || len == -1)
+	{
+		data.fd_states[fd] = 0;
+		return (NULL);
+	}
+	if (buffer[len - 1] != '\n')
+		data.fd_states[fd] = 1;
+	return (get_from_len(len, buffer));
+}
+
+char	*get_last_line(t_gnl_data *data)
+{
+
+	return ()
+}
+
+char	*get_from_len(size_t len, char *buffer)
+{
+	char	*line;
+
+	line = ft_calloc(len, sizeof(char));
+	if (!line)
+		return (NULL);
+	ft_strlcpy(line, buffer, len);
+	free(buffer);
+	return (line);
+}
+
+size_t	get_next_line_other(int fd, char *buffer)
+{
+	int	i;
+	int	len;
+
+	buffer = ft_calloc(BUFFER_SIZE, sizeof(char));
+	if (!buffer)
+		return (-1);
+	i = 0;
+	while (i < BUFFER_SIZE - 1 && (!i || (buffer[i - 1] && (unsigned int)buffer[i - 1] != '\n')))
+	{
+		len = read(fd, buffer + i, 1);
+		if (len == -1)
+			return (-1);
+		if (!len)
+			break ;
+		i++;
+	}
+	return (i);
+}
+
+size_t	get_next_line_stdin(t_gnl_data *data, char *buffer)
+{
+	int	i;
+	int	len;
+
+	buffer = ft_calloc(BUFFER_SIZE, sizeof(char));
+	if (!buffer)
+		return (-1);
+	len = read(0, buffer, BUFFER_SIZE);
+	if (len == -1)
+		return (-1);
+	i = 0;
+	while (buffer[i] && buffer[i] != '\n')
+		i++;
+	if (buffer[i] == '\n' && i + 1 != len)
+	{
+		ft_strlcpy(data->last, buffer + i + 1, BUFFER_SIZE);
+		buffer[i + 1] = 0;
+		return (i + 1);
+	}
+	return (len);
+}
+
 
 char	*get_next_line(int fd)
 {
