@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dderny <dderny@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: dderny <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 18:17:33 by dderny            #+#    #+#             */
-/*   Updated: 2024/11/17 21:42:25 by dderny           ###   ########.fr       */
+/*   Updated: 2024/11/18 16:39:06 by dderny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,20 @@
 
 typedef struct s_gnl_data
 {
-	int		*fd_states[BUFFER_SIZE];
-	char	last[BUFFER_SIZE];
+	char	bufs[4096][BUFFER_SIZE];
 }			t_gnl_data;
 
 char		*get_next_line(int fd);
+
+char		*get_line_from_last(t_gnl_data *data);
+
+char		*get_next_line_stdin_file(t_gnl_data *data, size_t len);
+
+char		*get_from_len(size_t len, char *buffer, int ismalloc);
+
+long long int		get_next_line_file(int fd, char *buffer);
+
+long long int		get_next_line_stdin(t_gnl_data *data, char *buffer);
 
 void		*ft_calloc(size_t nmemb, size_t size);
 

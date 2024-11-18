@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dderny <dderny@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: dderny <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 18:17:33 by dderny            #+#    #+#             */
-/*   Updated: 2024/11/18 00:40:53 by dderny           ###   ########.fr       */
+/*   Updated: 2024/11/18 18:01:17 by dderny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,36 +17,122 @@
 char	*get_next_line(int fd)
 {
 	static t_gnl_data	data;
+
+	if (fd < 0)
+		return (NULL);
+	if (!*data.bufs[fd])
+		read_line(fd, &data);
+	return ();
+}
+
+
+char	*read_line(int fd, t_gnl_data *data)
+{
+	ssize_t		total;
+	ssize_t		len;
+	char	*buffer;
+	char	*last;
+	
+	len = 0;
+	total = 0;
+	while (!len || get_newline(buffer, len) == )
+	{
+		buffer = ft_calloc(BUFFER_SIZE, sizeof(char));
+		if (!buffer)
+			return (NULL);
+		len = read(fd, buffer, BUFFER_SIZE);
+		if (len == -1)
+			return (NULL);
+		if (!len)
+			break ;
+	}
+}
+
+int	get_newline(char *str, ssize_t len)
+{
+	int i;
+
+	i = 0;
+	while (str[i] && str[i] != '\n')
+		i++;
+	if (str[i] != '\n')
+		return (0);
+	return (1);
+}
+
+
+
+
+
+
+
+char	*get_next_line(int fd)
+{
+	static t_gnl_data	data;
 	char				*buffer;
-	size_t				len;
+	long long int		len;
 
 	len = 0;
+	buffer = NULL;
 	if (!fd)
 	{
-		if (*data.last)
-			return (get_last_line(&data));
+		if (data.fd_states[0] == 3)
+			len = get_next_line_file(0, buffer);
+		else if (*data.last)
+			return (get_line_from_last(&data));
 		else
 			len = get_next_line_stdin(&data, buffer);
 	}
 	else
 		len = get_next_line_file(fd, buffer);
-	if (!buffer[0] || data.fd_states[fd] || len == -1)
+	if (len == -1 || !buffer[0] || data.fd_states[fd])
 	{
 		data.fd_states[fd] = 0;
 		return (NULL);
 	}
 	if (buffer[len - 1] != '\n')
 		data.fd_states[fd] = 1;
-	return (get_from_len(len, buffer));
+	return (get_from_len(len, buffer, 1));
 }
 
-char	*get_last_line(t_gnl_data *data)
+char	*get_line_from_last(t_gnl_data *data)
 {
+	size_t	len;
+	char	*line;
 
-	return ()
+	len = 1;
+	while (data->last[len] && data->last[len] != '\n')
+		len++;
+	if (data->last[len] == '\n')
+		len++;
+	if (!data->last[len] && data->fd_states[0] == 2)
+	{
+		data->fd_states[0] = 3;
+		return (get_next_line_stdin_file(data, len));
+	}
+	line = get_from_len(len, data->last, 0);
+	if (!line)
+		return (NULL);
+	if (data->last[len])
+		ft_strlcpy(data->last, data->last + len, BUFFER_SIZE);
+	return (line);
 }
 
-char	*get_from_len(size_t len, char *buffer)
+char	*get_next_line_stdin_file(t_gnl_data *data, size_t len)
+{
+	char	*buffer;
+	int		total;
+
+	buffer = NULL;
+	total = get_next_line_file(0, buffer);
+	if (total == -1 || !total || len)
+		return (NULL);
+	if (buffer[total - 1] != '\n')
+		data->fd_states[0] = 1;
+	return (buffer);
+}
+
+char	*get_from_len(size_t len, char *buffer, int ismalloc)
 {
 	char	*line;
 
@@ -54,11 +140,12 @@ char	*get_from_len(size_t len, char *buffer)
 	if (!line)
 		return (NULL);
 	ft_strlcpy(line, buffer, len);
-	free(buffer);
+	if (ismalloc)
+		free(buffer);
 	return (line);
 }
 
-size_t	get_next_line_other(int fd, char *buffer)
+long long int	get_next_line_file(int fd, char *buffer)
 {
 	int	i;
 	int	len;
@@ -76,10 +163,15 @@ size_t	get_next_line_other(int fd, char *buffer)
 			break ;
 		i++;
 	}
+	if (!i)
+	{
+		free(buffer);
+		return (-1);
+	}
 	return (i);
 }
 
-size_t	get_next_line_stdin(t_gnl_data *data, char *buffer)
+long long int	get_next_line_stdin(t_gnl_data *data, char *buffer)
 {
 	int	i;
 	int	len;
@@ -91,6 +183,8 @@ size_t	get_next_line_stdin(t_gnl_data *data, char *buffer)
 	if (len == -1)
 		return (-1);
 	i = 0;
+	if (buffer[BUFFER_SIZE - 1])
+		data->fd_states[0] = 2;
 	while (buffer[i] && buffer[i] != '\n')
 		i++;
 	if (buffer[i] == '\n' && i + 1 != len)
@@ -100,86 +194,6 @@ size_t	get_next_line_stdin(t_gnl_data *data, char *buffer)
 		return (i + 1);
 	}
 	return (len);
-}
-
-
-char	*get_next_line(int fd)
-{
-	static char	last[BUFFER_SIZE + 1];
-	char		*buffer;
-	int			len;
-	int			i;
-
-	if (!fd && ft_strlen(last) > 1)
-	{
-		if (*last == '1')
-		{
-			last[0] = '0';
-			last[1] = 0;
-			return (NULL);
-		}
-		i = 1;
-		while (last[i] && last[i] != '\n')
-			i++;
-		buffer = ft_calloc(i, sizeof(char));
-		if (!buffer)
-			return (NULL);
-		ft_strlcpy(buffer, last + 1, i + 1);
-		if (!last[i])
-		{
-			last[0] = '1';
-			last[1] = 0;
-		}
-		else
-		{
-			ft_strlcpy(last + 1, last + i + 1, BUFFER_SIZE);
-			last[0] = '0';
-		}
-		
-		return (buffer);
-	}
-	buffer = ft_calloc(BUFFER_SIZE, sizeof(char));
-	if (!buffer)
-		return (NULL);
-	if (fd)
-	{
-		i = 0;
-		while (i < BUFFER_SIZE - 1 && (!i || (buffer[i - 1] && (unsigned int)buffer[i - 1] != '\n')))
-		{
-			len = read(fd, buffer + i, 1);
-			if (len == -1)
-				return (NULL);
-			if (!len)
-				break ;
-			i++;
-		}
-	}
-	else
-	{
-		len = read(fd, buffer, BUFFER_SIZE);
-		if (len == -1)
-			return (NULL);
-		i = 0;
-		while (buffer[i])
-		{
-			if (buffer[i] == '\n' && i + 1 != len)
-			{
-				last[0] = '0';
-				ft_strlcpy(last + 1, buffer + i + 1, BUFFER_SIZE);
-				buffer[i + 1] = 0;
-				return (buffer);
-			}
-			i++;			
-		}
-		if (buffer[0] && buffer[len - 1] != '\n')
-		{
-			last[0] = '1';
-			last[1] = 0;
-		}
-	}
-	if (!buffer[0])
-		return (NULL);
-	return (buffer);
 }
 
 #include <fcntl.h>
@@ -198,7 +212,7 @@ int	main()
 
 	int fd2 = open("test_2.txt", O_RDONLY);
 	int fd1 = open("test_1.txt", O_RDONLY);
-	int fd3 = open("test_3.txt", O_RDONLY);
+	int fd3 = open("bible.txt", O_RDONLY);
 	int i = 0;
 	while (1)
 	{
