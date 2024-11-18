@@ -35,7 +35,7 @@ char	*read_line(int fd, t_gnl_data *data)
 	
 	len = 0;
 	total = 0;
-	while (!len || get_newline(buffer, len) == )
+	while (!len || (!get_newline(buffer, len) && len = BUFFER_SIZE))
 	{
 		buffer = ft_calloc(BUFFER_SIZE, sizeof(char));
 		if (!buffer)
@@ -46,6 +46,7 @@ char	*read_line(int fd, t_gnl_data *data)
 		if (!len)
 			break ;
 	}
+    return (buffer);
 }
 
 int	get_newline(char *str, ssize_t len)
