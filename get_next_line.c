@@ -6,7 +6,7 @@
 /*   By: dderny <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 18:17:33 by dderny            #+#    #+#             */
-/*   Updated: 2024/11/19 18:09:50 by dderny           ###   ########.fr       */
+/*   Updated: 2024/11/19 19:22:03 by dderny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,8 @@ char	*read_buffer(int fd, t_gnl_data *data, size_t *total)
 	if (!buffer)
 		return (NULL);
 	ft_strlcpy(buffer, data->bufs[fd], newline + 1);
-	if (newline || !data->states[fd])	
+	__builtin_printf("{{ %s; %li; %i\n", buffer, newline, data->bufs[fd][newline]);
+	if (newline || !data->states[fd])
 		ft_strlcpy(data->bufs[fd], data->bufs[fd] + newline + 1, BUFFER_SIZE);
 	else
 	{
