@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dderny <dderny@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: dderny <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 18:17:33 by dderny            #+#    #+#             */
-/*   Updated: 2024/11/16 22:29:50 by dderny           ###   ########.fr       */
+/*   Updated: 2024/11/19 17:33:02 by dderny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,17 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	return (array);
 }
 
+size_t	get_newline(char *str)
+{
+	size_t	i;
+
+	i = 0;
+	while (str[i] && (unsigned char)str[i] != '\n')
+		i++;
+	if ((unsigned char)str[i] != '\n')
+		return (0);
+	return (i);
+}
 
 
 

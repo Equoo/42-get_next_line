@@ -6,7 +6,7 @@
 /*   By: dderny <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 18:17:33 by dderny            #+#    #+#             */
-/*   Updated: 2024/11/18 16:39:06 by dderny           ###   ########.fr       */
+/*   Updated: 2024/11/19 17:49:45 by dderny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,23 +15,26 @@
 # include <stdint.h>
 # include <stdlib.h>
 # include <unistd.h>
-
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE = 4096
+# endif
 typedef struct s_gnl_data
 {
 	char	bufs[4096][BUFFER_SIZE];
+	int		states[4096];
 }			t_gnl_data;
 
 char		*get_next_line(int fd);
 
-char		*get_line_from_last(t_gnl_data *data);
+char		*read_line(int fd, char *buffer, t_gnl_data *data, size_t *total);
 
-char		*get_next_line_stdin_file(t_gnl_data *data, size_t len);
+char		*read_until_newline(int fd, size_t *newline, char *buffer, size_t *total, t_gnl_data *data);
 
-char		*get_from_len(size_t len, char *buffer, int ismalloc);
+char		*read_buffer(int fd, t_gnl_data *data, size_t *total);
 
-long long int		get_next_line_file(int fd, char *buffer);
+size_t		get_newline(char *str);
 
-long long int		get_next_line_stdin(t_gnl_data *data, char *buffer);
+
 
 void		*ft_calloc(size_t nmemb, size_t size);
 
