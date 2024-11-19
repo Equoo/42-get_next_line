@@ -17,48 +17,79 @@
 char	*get_next_line(int fd)
 {
 	static t_gnl_data	data;
+	char				*line;
+	size_t				total;
 
 	if (fd < 0)
 		return (NULL);
 	if (!*data.bufs[fd])
-		read_line(fd, &data);
+		line = read_line(fd, &data, &total);
+	else
+		line = read_buffer(fd, &data, &total);
 	return ();
 }
 
-
-char	*read_line(int fd, t_gnl_data *data)
+char	*read_buffer(int fd, t_gnl_data *data, size_t *total)
 {
-	ssize_t		total;
-	ssize_t		len;
-	char	*buffer;
-	char	*last;
-	
-	len = 0;
-	total = 0;
-	while (!len || (!get_newline(buffer, len) && len = BUFFER_SIZE))
+	char		*buffer;
+	size_t	len;
+	size_t	newline;
+
+	buffer = NULL;
+	newline = get_newline(buffer, len);
+	if (newline)
 	{
+		buffer = ft_calloc(newline + 1, sizeof(char));
+		if (!buffer)
+			return (NULL);
+		ft_strlcpy(buffer, data->bufs[fd], newline + 1);
+		ft_strlcpy(data->bufs[fd], data->bufs[fd] + newline + 1, BUFFER_SIZE);
+	}
+	else
+		
+	return (buffer);
+}
+
+char	*read_line(int fd, t_gnl_data *data, size_t *total)
+{
+	ssize_t		len;
+	size_t		newline;
+	char		*buffer;
+	char		*last;
+	
+	while (!len || (!newline && len == BUFFER_SIZE))
+	{
+		len = 0;
+		newline = 0;
 		buffer = ft_calloc(BUFFER_SIZE, sizeof(char));
 		if (!buffer)
 			return (NULL);
 		len = read(fd, buffer, BUFFER_SIZE);
 		if (len == -1)
 			return (NULL);
+		*total = *total + len;
+		newline = get_newline(buffer, len);
 		if (!len)
 			break ;
+	}
+	if (newline != *total - 1)
+	{
+		buffer[newline + 1] = 0;
+		ft_strlcpy(data->bufs[fd], buffer + newline + 1, *total);
 	}
     return (buffer);
 }
 
-int	get_newline(char *str, ssize_t len)
+size_t	get_newline(char *str, ssize_t len)
 {
-	int i;
+	size_t	i;
 
 	i = 0;
 	while (str[i] && str[i] != '\n')
 		i++;
 	if (str[i] != '\n')
 		return (0);
-	return (1);
+	return (i);
 }
 
 
