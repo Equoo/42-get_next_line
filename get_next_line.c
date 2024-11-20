@@ -6,7 +6,7 @@
 /*   By: dderny <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 18:17:33 by dderny            #+#    #+#             */
-/*   Updated: 2024/11/20 11:37:02 by dderny           ###   ########.fr       */
+/*   Updated: 2024/11/20 16:47:19 by dderny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,7 @@ int	main(void)
 
 	int fd2 = open("test_2.txt", O_RDONLY);
 	int fd1 = open("test_1.txt", O_RDONLY);
-	int fd3 = open("test_3.txt", O_RDONLY);
+	int fd3 = open("bible.txt", O_RDONLY);
 	int i = 0;
 	while (1)
 	{

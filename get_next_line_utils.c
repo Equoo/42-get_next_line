@@ -6,7 +6,7 @@
 /*   By: dderny <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 18:17:33 by dderny            #+#    #+#             */
-/*   Updated: 2024/11/20 11:53:23 by dderny           ###   ########.fr       */
+/*   Updated: 2024/11/20 11:53:23y dderny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,18 +78,57 @@ size_t	ft_strlcpy(char *dest, const char *src, size_t n)
 		dest[i] = 0;
 	return ((size_t)ft_strlen(src));
 }
-
-size_t	ft_strlen(const char *str)
+static size_t	lenof64(size_t s_int, const char *cp, const char *str)
 {
-	const char	*const_str;
+	if (cp[0] == 0)
+		return (cp - str);
+	if (cp[1] == 0)
+		return (cp - str + 1);
+	if (cp[2] == 0)
+		return (cp - str + 2);
+	if (cp[3] == 0)
+		return (cp - str + 3);
+	if (sizeof(s_int) > 4)
+	{
+		if (cp[4] == 0)
+			return (cp - str + 4);
+		if (cp[5] == 0)
+			return (cp - str + 5);
+		if (cp[6] == 0)
+			return (cp - str + 6);
+		if (cp[7] == 0)
+			return (cp - str + 7);
+	}
+	return (0);
+}
+
+extern size_t	ft_strlen(const char *str)
+{
+	size_t	s_int;
+	size_t	*int_str;
+	size_t	mask;
+	size_t	mask2;
 
 	STARTTIME("strlen");
-	const_str = str;
-	while (*const_str != '\0')
-		++const_str;
-	ENDTIME("strlen");
-	return (const_str - str);
+	if (!*str)
+		return (0);
+	mask = 0x8080808080808080;
+	mask2 = 0x1010101010101010;
+	int_str = (size_t *)str;
+	while (*int_str)
+	{
+		s_int = *int_str++;
+		if ((s_int - mask2) & ~s_int & mask)
+		{
+			s_int = lenof64(s_int, (const char *)(int_str - 1), str);
+			if (s_int)
+				return (s_int);
+		}
+	}
+	STARTTIME("strlen");
+	return ((const char *)int_str - str);
 }
+
 
 size_t	ft_strlcat(char *dest, const char *src, size_t n)
 {
