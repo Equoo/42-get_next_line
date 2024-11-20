@@ -6,7 +6,7 @@
 /*   By: dderny <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 18:17:33 by dderny            #+#    #+#             */
-/*   Updated: 2024/11/19 17:49:45 by dderny           ###   ########.fr       */
+/*   Updated: 2024/11/20 10:52:12 by dderny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE = 4096
 # endif
+
+# include "time_lib.h"
 typedef struct s_gnl_data
 {
 	char	bufs[4096][BUFFER_SIZE];

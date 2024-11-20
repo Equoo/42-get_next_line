@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dderny <dderny@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: dderny <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 18:17:33 by dderny            #+#    #+#             */
-/*   Updated: 2024/11/20 01:57:44 by dderny           ###   ########.fr       */
+/*   Updated: 2024/11/20 11:37:02 by dderny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ char	*read_line(int fd, char *buffer, t_gnl_data *data, size_t *total)
 	size_t	newline;
 
 	newline = 0;
+	STARTTIME("read_line");
 	buffer = read_until_newline(fd, &newline, buffer, total, data);
 	if (buffer && newline != *total - 1)
 	{
@@ -43,6 +44,7 @@ char	*read_line(int fd, char *buffer, t_gnl_data *data, size_t *total)
 		if (newline)
 			buffer[newline + 1] = 0;
 	}
+	ENDTIME("read_line");
 	return (buffer);
 }
 
@@ -53,24 +55,32 @@ char	*read_until_newline(int fd, size_t *newline, char *buffer,
 	char	*last;
 
 	len = 0;
+	STARTTIME("read_until_newline");
 	while (!len || (!*newline && len == BUFFER_SIZE))
 	{
 		last = buffer;
 		buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
 		if (!buffer)
 			return (NULL);
+		STARTTIME("read_line:READ");
 		len = read(fd, buffer, BUFFER_SIZE);
+		ENDTIME("read_line:READ");
 		if (len == -1 || !len)
 			return (NULL);
 		*total = *total + (size_t)len;
 		if (last)
+		{
+			STARTTIME("read_line:STRJOIN");
 			buffer = ft_strjoin(last, buffer);
+			ENDTIME("read_line:STRJOIN");
+		}
 		if (!buffer)
 			return (NULL);
 		*newline = get_newline(buffer);
 	}
 	if (len == BUFFER_SIZE)
 		data->states[fd] = 1;
+	ENDTIME("read_until_newline");
 	return (buffer);
 }
 
@@ -79,6 +89,7 @@ char	*read_buffer(int fd, t_gnl_data *data, size_t *total)
 	const size_t	newline = get_newline(data->bufs[fd]);
 	char			*buffer;
 
+	STARTTIME("read_buffer");
 	buffer = NULL;
 	*total = newline + 1;
 	if (!newline)
@@ -93,10 +104,15 @@ char	*read_buffer(int fd, t_gnl_data *data, size_t *total)
 	{
 		buffer = read_line(fd, buffer, data, total);
 	}
+	ENDTIME("read_buffer");
 	return (buffer);
 }
 
+
+
+
 #include <fcntl.h>
+#include "time_lib.h"
 
 int	main(void)
 {
@@ -122,7 +138,7 @@ int	main(void)
 		//char *tmp2 = get_next_line(fd2);
 		char *tmp3 = get_next_line(fd3);
 
-		if (i == 3)
+		/* if (i == 3)
 		{
 			while (1)
 			{
@@ -134,7 +150,7 @@ int	main(void)
 			}
 			__builtin_printf("\nsayed:\n%s\n\n", test4);
 			i = 1000;
-		}
+		} */
 
 		//if (tmp)
 		//	test1 = ft_strjoin(test1, tmp);
@@ -150,6 +166,9 @@ int	main(void)
 	//__builtin_printf("%s\n\n", test1);
 	//__builtin_printf("%s\n\n", test2);
 	__builtin_printf("%s\n\n", test3);
+
+	PRINTTIMES();
+
 	free(test1);
 	free(test2);
 	free(test3);

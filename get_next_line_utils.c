@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dderny <dderny@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: dderny <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 18:17:33 by dderny            #+#    #+#             */
-/*   Updated: 2024/11/20 02:17:00 by dderny           ###   ########.fr       */
+/*   Updated: 2024/11/20 11:53:23 by dderny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,9 +83,11 @@ size_t	ft_strlen(const char *str)
 {
 	const char	*const_str;
 
+	STARTTIME("strlen");
 	const_str = str;
 	while (*const_str != '\0')
 		++const_str;
+	ENDTIME("strlen");
 	return (const_str - str);
 }
 
