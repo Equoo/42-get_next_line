@@ -134,7 +134,7 @@ size_t	ft_strlen(const char *str)
 			s_int = 0;
 			while (++i < (int)sizeof(s_int))
 				if ((const char *)(int_str - 1)[i] == 0)
-					s_int = (void *)int_str - 1 - (void *)str + i;
+					s_int = (void *)(int_str - 1) - (void *)str + i;
 			if (s_int)
 				return (s_int);
 		}
