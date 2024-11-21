@@ -6,7 +6,7 @@
 /*   By: dderny <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 18:17:33 by dderny            #+#    #+#             */
-/*   Updated: 2024/11/21 18:13:10 by dderny           ###   ########.fr       */
+/*   Updated: 2024/11/21 18:16:42 by dderny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,7 @@ size_t	get_newline(char *str)
 		i++;
 	if ((unsigned char)str[i] != '\n')
 		return (0);
+	__builtin_printf("== %li\n", i);
 	return (i);
 }
 
