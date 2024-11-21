@@ -45,7 +45,7 @@ char	*ft_strjoin(char *s1, char *s2)
 	if (!s1 || !s2)
 		return (NULL);
 	total = ft_strlen(s1) + ft_strlen(s2) + 1;
-	str = ft_calloc(total, sizeof(char));
+	str = ft_calloc(total + 8, sizeof(char));
 	if (!str)
 		return (NULL);
 	ft_strlcpy(str, s1, total);

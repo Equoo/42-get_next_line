@@ -6,7 +6,7 @@
 /*   By: dderny <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 18:17:33 by dderny            #+#    #+#             */
-/*   Updated: 2024/11/21 14:05:29 by dderny           ###   ########.fr       */
+/*   Updated: 2024/11/21 18:13:10 by dderny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ char	*read_line(int fd, char *buffer, t_gnl_data *data, size_t *total)
 	buffer = read_until_newline(fd, &newline, buffer, total, data);
 	if (buffer && newline != *total - 1)
 	{
-		ft_strlcpy(data->bufs[fd], buffer + newline + 1, BUFFER_SIZE);
+		ft_strlcpy(data->bufs[fd], buffer + newline + 1, BUFFER_SIZE + 1);
 		if (newline)
 			buffer[newline + 1] = 0;
 	}
@@ -56,7 +56,7 @@ char	*read_until_newline(int fd, size_t *newline, char *buffer,
 	while (!len || (!*newline && len == BUFFER_SIZE))
 	{
 		last = buffer;
-		buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+		buffer = ft_calloc(BUFFER_SIZE + 9, sizeof(char));
 		if (!buffer)
 			return (NULL);
 		len = read(fd, buffer, BUFFER_SIZE);
@@ -64,9 +64,7 @@ char	*read_until_newline(int fd, size_t *newline, char *buffer,
 			return (NULL);
 		*total = *total + (size_t)len;
 		if (last)
-		{
 			buffer = ft_strjoin(last, buffer);
-		}
 		if (!buffer)
 			return (NULL);
 		*newline = get_newline(buffer);
@@ -80,20 +78,26 @@ char	*read_buffer(int fd, t_gnl_data *data, size_t *total)
 {
 	const size_t	newline = get_newline(data->bufs[fd]);
 	char			*buffer;
+	//char			*tmp;
 
 	buffer = NULL;
 	*total = newline + 1;
 	if (!newline)
 		*total = ft_strlen(data->bufs[fd]);
-	buffer = ft_calloc(*total + 1, sizeof(char));
+	buffer = ft_calloc(*total + 9, sizeof(char));
 	if (!buffer)
 		return (NULL);
 	ft_strlcpy(buffer, data->bufs[fd], *total + 1);
+	__builtin_printf("-- %s\n", buffer);
 	if (newline || !data->states[fd])
-		ft_strlcpy(data->bufs[fd], data->bufs[fd] + *total, BUFFER_SIZE);
+		ft_strlcpy(data->bufs[fd], data->bufs[fd] + *total, BUFFER_SIZE + 1);
 	else
 	{
+		//tmp = buffer;
 		buffer = read_line(fd, buffer, data, total);
+		/* if (tmp)
+		{	__builtin_printf("%s;\n", tmp);
+			free(tmp);} */
 	}
 	//__builtin_printf("--{{ %s ^sep^ %s }}--", buffer, data->bufs[fd]);
 	return (buffer);
@@ -156,7 +160,7 @@ int	main(void)
 	}
 	//__builtin_printf("%s\n\n", test1);
 	//__builtin_printf("%s\n\n", test2);
-	__builtin_printf("%s\n\n", test3);
+	__builtin_printf("%s\n%i\n", test3, i);
 
 	free(test3);
 	close(fd3);
