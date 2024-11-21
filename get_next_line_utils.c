@@ -11,14 +11,16 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdlib.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 void	*ft_calloc(size_t nmemb, size_t size)
 {
 	size_t	i;
 	void	*array;
+	size_t	*intarray;
 
+	STARTTIME("calloc");
 	i = 0;
 	array = NULL;
 	if ((unsigned long long)nmemb * (unsigned long long)size > SIZE_MAX)
@@ -26,25 +28,16 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	array = malloc(nmemb * size);
 	if (array)
 	{
+		intarray = (size_t *)array;
+		while (i < (nmemb * size) / sizeof(i))
+			intarray[i++] = 0;
+		i = i * sizeof(i);
 		while (i < nmemb * size)
 			((char *)array)[i++] = 0;
 	}
+	ENDTIME("calloc");
 	return (array);
 }
-
-size_t	get_newline(char *str)
-{
-	size_t	i;
-
-	i = 0;
-	while (str[i] && (unsigned char)str[i] != '\n')
-		i++;
-	if ((unsigned char)str[i] != '\n')
-		return (0);
-	return (i);
-}
-
-
 
 char	*ft_strjoin(char *s1, char *s2)
 {
@@ -64,71 +57,35 @@ char	*ft_strjoin(char *s1, char *s2)
 	return (str);
 }
 
+#include <string.h>
 size_t	ft_strlcpy(char *dest, const char *src, size_t n)
 {
 	size_t	i;
+	size_t	src_len;
 
+	STARTTIME("strlcpy");
+	src_len = ft_strlen(src);
+	if (!src_len)
+		return (0);
 	i = 0;
+	/* while (i < src_len / sizeof(src_len) && i < n / sizeof(src_len))
+	{
+		__builtin_printf("%ld, %ld\n", src_len, i);
+		((size_t *)dest)[i] = ((size_t *)src)[i];
+		i++;
+	}
+	i = i * sizeof(src_len); */
 	while (src[i] && i + 1 < n)
 	{
 		dest[i] = src[i];
 		i++;
 	}
+	__builtin_printf("UH %ld, %ld, %ld, %ld\n", strlen(src), src_len, n, i);
 	if (n)
 		dest[i] = 0;
-	return ((size_t)ft_strlen(src));
+	ENDTIME("strlcpy");
+	return (src_len);
 }
-static size_t	lenof64(size_t s_int, const char *cp, const char *str)
-{
-	if (cp[0] == 0)
-		return (cp - str);
-	if (cp[1] == 0)
-		return (cp - str + 1);
-	if (cp[2] == 0)
-		return (cp - str + 2);
-	if (cp[3] == 0)
-		return (cp - str + 3);
-	if (sizeof(s_int) > 4)
-	{
-		if (cp[4] == 0)
-			return (cp - str + 4);
-		if (cp[5] == 0)
-			return (cp - str + 5);
-		if (cp[6] == 0)
-			return (cp - str + 6);
-		if (cp[7] == 0)
-			return (cp - str + 7);
-	}
-	return (0);
-}
-
-extern size_t	ft_strlen(const char *str)
-{
-	size_t	s_int;
-	size_t	*int_str;
-	size_t	mask;
-	size_t	mask2;
-
-	STARTTIME("strlen");
-	if (!*str)
-		return (0);
-	mask = 0x8080808080808080;
-	mask2 = 0x1010101010101010;
-	int_str = (size_t *)str;
-	while (*int_str)
-	{
-		s_int = *int_str++;
-		if ((s_int - mask2) & ~s_int & mask)
-		{
-			s_int = lenof64(s_int, (const char *)(int_str - 1), str);
-			if (s_int)
-				return (s_int);
-		}
-	}
-	STARTTIME("strlen");
-	return ((const char *)int_str - str);
-}
-
 
 size_t	ft_strlcat(char *dest, const char *src, size_t n)
 {
@@ -137,6 +94,7 @@ size_t	ft_strlcat(char *dest, const char *src, size_t n)
 	size_t	destlen;
 	size_t	srclen;
 
+	STARTTIME("strlcat");
 	i = 0;
 	j = 0;
 	srclen = ft_strlen(src);
@@ -154,5 +112,32 @@ size_t	ft_strlcat(char *dest, const char *src, size_t n)
 		j++;
 	}
 	dest[i] = 0;
+	ENDTIME("strlcat");
 	return (destlen + srclen);
+}
+
+size_t	ft_strlen(const char *str)
+{
+	size_t	s_int;
+	size_t	*int_str;
+	int		i;
+
+	if (!*str)
+		return (0);
+	int_str = (size_t *)str;
+	while (*int_str)
+	{
+		s_int = *int_str++;
+		if ((s_int - HAS_ZERO_MASK) & ~s_int & HAS_ZERO_MASKN)
+		{
+			i = -1;
+			s_int = 0;
+			while (++i < (int)sizeof(s_int))
+				if ((const char *)(int_str - 1)[i] == 0)
+					s_int = (void *)int_str - 1 - (void *)str + i;
+			if (s_int)
+				return (s_int);
+		}
+	}
+	return ((const char *)int_str - str);
 }

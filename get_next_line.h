@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dderny <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: dderny <dderny@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 18:17:33 by dderny            #+#    #+#             */
-/*   Updated: 2024/11/20 15:03:45 by dderny           ###   ########.fr       */
+/*   Updated: 2024/11/21 00:59:43 by dderny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 4096
 # endif
+# define HAS_ZERO_MASK 0x1010101010101010
+# define HAS_ZERO_MASKN 0x8080808080808080
 
 # include "time_lib.h"
 typedef struct s_gnl_data
@@ -36,13 +38,14 @@ char		*read_buffer(int fd, t_gnl_data *data, size_t *total);
 
 size_t		get_newline(char *str);
 
-
-
 void		*ft_calloc(size_t nmemb, size_t size);
 
 char		*ft_strjoin(char *s1, char *s2);
+
 size_t		ft_strlcpy(char *dest, const char *src, size_t n);
+
 size_t		ft_strlen(const char *str);
+
 size_t		ft_strlcat(char *dest, const char *src, size_t n);
 
 #endif

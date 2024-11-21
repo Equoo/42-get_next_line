@@ -33,6 +33,24 @@ t_timehook	**GETTIMEHOOKS(void)
 	return (&hooks);
 }
 
+void	*TIME_calloc(size_t nmemb, size_t size)
+{
+	size_t	i;
+	void	*array;
+	
+	i = 0;
+	array = NULL;
+	if ((unsigned long long)nmemb * (unsigned long long)size > SIZE_MAX)
+		return (NULL);
+	array = malloc(nmemb * size);
+	if (array)
+	{
+		while (i < nmemb * size)
+			((char *)array)[i++] = 0;
+	}
+	return (array);
+}
+
 t_timehook	*GETHOOKBYID(char *id)
 {
 	t_timehook	**hooks;
@@ -52,12 +70,12 @@ t_timehook	*GETHOOKBYID(char *id)
 	{
 		if (*hooks)
 		{
-			hook->next = ft_calloc(1, sizeof(t_timehook));
+			hook->next = TIME_calloc(1, sizeof(t_timehook));
 			hook = hook->next;
 		}
 		else
 		{
-			*hooks = ft_calloc(1, sizeof(t_timehook));
+			*hooks = TIME_calloc(1, sizeof(t_timehook));
 			hook = *hooks;
 		}
 		if (!hook)

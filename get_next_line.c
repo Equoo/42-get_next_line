@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dderny <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: dderny <dderny@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 18:17:33 by dderny            #+#    #+#             */
-/*   Updated: 2024/11/20 16:47:19 by dderny           ###   ########.fr       */
+/*   Updated: 2024/11/21 01:48:09 by dderny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,17 @@ char	*read_buffer(int fd, t_gnl_data *data, size_t *total)
 	return (buffer);
 }
 
+size_t	get_newline(char *str)
+{
+	size_t	i;
 
+	i = 0;
+	while (str[i] && (unsigned char)str[i] != '\n')
+		i++;
+	if ((unsigned char)str[i] != '\n')
+		return (0);
+	return (i);
+}
 
 
 #include <fcntl.h>
@@ -129,7 +139,7 @@ int	main(void)
 
 	int fd2 = open("test_2.txt", O_RDONLY);
 	int fd1 = open("test_1.txt", O_RDONLY);
-	int fd3 = open("bible.txt", O_RDONLY);
+	int fd3 = open("test_4.txt", O_RDONLY);
 	int i = 0;
 	while (1)
 	{
@@ -137,6 +147,7 @@ int	main(void)
 		//char *tmp = get_next_line(fd1);
 		//char *tmp2 = get_next_line(fd2);
 		char *tmp3 = get_next_line(fd3);
+		
 
 		/* if (i == 3)
 		{
@@ -165,7 +176,7 @@ int	main(void)
 	}
 	//__builtin_printf("%s\n\n", test1);
 	//__builtin_printf("%s\n\n", test2);
-	__builtin_printf("%s\n\n", test3);
+	//__builtin_printf("%s\n\n", test3);
 
 	PRINTTIMES();
 
