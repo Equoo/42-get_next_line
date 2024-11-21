@@ -64,12 +64,12 @@ size_t	ft_strlcpy(char *dest, const char *src, size_t n)
 	if (!src_len)
 		return (0);
 	i = 0;
-	while (i < src_len / sizeof(src_len) - 1 && i < n / sizeof(src_len) - 1)
+	/* while (i < src_len / sizeof(src_len) - 1 && i < n / sizeof(src_len) - 1)
 	{
 		((size_t *)dest)[i] = ((size_t *)src)[i];
 		i++;
 	}
-	i = i * sizeof(src_len);
+	i = i * sizeof(src_len); */
 	while (src[i] && i + 1 < n)
 	{
 		dest[i] = src[i];

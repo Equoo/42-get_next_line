@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dderny <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: dderny <dderny@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 18:17:33 by dderny            #+#    #+#             */
-/*   Updated: 2024/11/21 18:16:42 by dderny           ###   ########.fr       */
+/*   Updated: 2024/11/21 23:51:16 by dderny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,13 +82,13 @@ char	*read_buffer(int fd, t_gnl_data *data, size_t *total)
 
 	buffer = NULL;
 	*total = newline + 1;
-	if (!newline)
+	if (!newline && data->bufs[fd][0] != '\n')
 		*total = ft_strlen(data->bufs[fd]);
 	buffer = ft_calloc(*total + 9, sizeof(char));
 	if (!buffer)
 		return (NULL);
 	ft_strlcpy(buffer, data->bufs[fd], *total + 1);
-	__builtin_printf("-- %s\n", buffer);
+	__builtin_printf("-- %ld\\\\ %s\n", *total, buffer);
 	if (newline || !data->states[fd])
 		ft_strlcpy(data->bufs[fd], data->bufs[fd] + *total, BUFFER_SIZE + 1);
 	else
@@ -112,7 +112,7 @@ size_t	get_newline(char *str)
 		i++;
 	if ((unsigned char)str[i] != '\n')
 		return (0);
-	__builtin_printf("== %li\n", i);
+	//__builtin_printf("== %li ||  %s\n", i, str);
 	return (i);
 }
 
