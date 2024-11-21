@@ -6,7 +6,7 @@
 /*   By: dderny <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:33:30 by dderny            #+#    #+#             */
-/*   Updated: 2024/11/20 10:59:11 by dderny           ###   ########.fr       */
+/*   Updated: 2024/11/21 13:36:49 by dderny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,10 @@ typedef struct s_timehook
 	struct s_timehook	*next;
 }						t_timehook;
 
-t_timehook				**GETTIMEHOOKS(void);
-t_timehook				*GETHOOKBYID(char *id);
-int						STARTTIME(char *id);
-int						ENDTIME(char *id);
-void					PRINTTIMES(void);
+t_timehook				**gettimehooks(void);
+t_timehook				*gethookbyid(char *id);
+int						starttime(char *id);
+int						endtime(char *id);
+void					printtimes(void);
 
 #endif

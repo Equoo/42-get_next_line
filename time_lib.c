@@ -16,7 +16,7 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 	return ((int)((unsigned char)s1[i] - (unsigned char)s2[i]));
 }
 
-size_t	TIME_strlen(const char *str)
+size_t	time_strlen(const char *str)
 {
 	const char	*const_str;
 
@@ -26,14 +26,14 @@ size_t	TIME_strlen(const char *str)
 	return (const_str - str);
 }
 
-t_timehook	**GETTIMEHOOKS(void)
+t_timehook	**gettimehooks(void)
 {
 	static t_timehook	*hooks;
 
 	return (&hooks);
 }
 
-void	*TIME_calloc(size_t nmemb, size_t size)
+void	*time_calloc(size_t nmemb, size_t size)
 {
 	size_t	i;
 	void	*array;
@@ -51,15 +51,15 @@ void	*TIME_calloc(size_t nmemb, size_t size)
 	return (array);
 }
 
-t_timehook	*GETHOOKBYID(char *id)
+t_timehook	*gethookbyid(char *id)
 {
 	t_timehook	**hooks;
 	t_timehook	*hook;
 	size_t		len;
 
-	hooks = GETTIMEHOOKS();
+	hooks = gettimehooks();
 	hook = *hooks;
-	len = TIME_strlen(id);
+	len = time_strlen(id);
 	while (hook && ft_strncmp(hook->id, id, len))
 	{	
 		if (!hook->next)
@@ -70,12 +70,12 @@ t_timehook	*GETHOOKBYID(char *id)
 	{
 		if (*hooks)
 		{
-			hook->next = TIME_calloc(1, sizeof(t_timehook));
+			hook->next = time_calloc(1, sizeof(t_timehook));
 			hook = hook->next;
 		}
 		else
 		{
-			*hooks = TIME_calloc(1, sizeof(t_timehook));
+			*hooks = time_calloc(1, sizeof(t_timehook));
 			hook = *hooks;
 		}
 		if (!hook)
@@ -88,35 +88,35 @@ t_timehook	*GETHOOKBYID(char *id)
 	return (hook);
 }
 
-int	STARTTIME(char *id)
+int	starttime(char *id)
 {
 	t_timehook	*hook;
 
-	hook = GETHOOKBYID(id);
+	hook = gethookbyid(id);
 	if (!hook)
 		return (0);
 	hook->start = clock();
 	return (1);
 }
 
-int	ENDTIME(char *id)
+int	endtime(char *id)
 {
 	t_timehook	*hook;
 
-	hook = GETHOOKBYID(id);
+	hook = gethookbyid(id);
 	if (!hook)
 		return (0);
 	hook->total += ((double)(clock() - hook->start)) / CLOCKS_PER_SEC;
 	return (1);
 }
 
-void	PRINTTIMES(void)
+void	printtimes(void)
 {
 	t_timehook	**hooks;
 	t_timehook	*hook;
 	t_timehook	*last;
 
-	hooks = GETTIMEHOOKS();
+	hooks = gettimehooks();
 	hook = *hooks;
 	while (hook)
 	{

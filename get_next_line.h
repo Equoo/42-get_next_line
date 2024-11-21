@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dderny <dderny@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: dderny <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 18:17:33 by dderny            #+#    #+#             */
-/*   Updated: 2024/11/21 00:59:43 by dderny           ###   ########.fr       */
+/*   Updated: 2024/11/21 13:54:07 by dderny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,15 @@
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 4096
 # endif
+# define MAX_FILES 4096
 # define HAS_ZERO_MASK 0x1010101010101010
 # define HAS_ZERO_MASKN 0x8080808080808080
 
 # include "time_lib.h"
 typedef struct s_gnl_data
 {
-	char	bufs[4096][BUFFER_SIZE];
-	int		states[4096];
+	char	bufs[MAX_FILES][BUFFER_SIZE + 1];
+	int		states[MAX_FILES];
 }			t_gnl_data;
 
 char		*get_next_line(int fd);

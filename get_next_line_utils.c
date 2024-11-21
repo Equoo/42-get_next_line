@@ -20,7 +20,6 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	void	*array;
 	size_t	*intarray;
 
-	STARTTIME("calloc");
 	i = 0;
 	array = NULL;
 	if ((unsigned long long)nmemb * (unsigned long long)size > SIZE_MAX)
@@ -35,7 +34,6 @@ void	*ft_calloc(size_t nmemb, size_t size)
 		while (i < nmemb * size)
 			((char *)array)[i++] = 0;
 	}
-	ENDTIME("calloc");
 	return (array);
 }
 
@@ -57,33 +55,28 @@ char	*ft_strjoin(char *s1, char *s2)
 	return (str);
 }
 
-#include <string.h>
 size_t	ft_strlcpy(char *dest, const char *src, size_t n)
 {
 	size_t	i;
 	size_t	src_len;
 
-	STARTTIME("strlcpy");
 	src_len = ft_strlen(src);
 	if (!src_len)
 		return (0);
 	i = 0;
-	/* while (i < src_len / sizeof(src_len) && i < n / sizeof(src_len))
+	while (i < src_len / sizeof(src_len) - 1 && i < n / sizeof(src_len) - 1)
 	{
-		__builtin_printf("%ld, %ld\n", src_len, i);
 		((size_t *)dest)[i] = ((size_t *)src)[i];
 		i++;
 	}
-	i = i * sizeof(src_len); */
+	i = i * sizeof(src_len);
 	while (src[i] && i + 1 < n)
 	{
 		dest[i] = src[i];
 		i++;
 	}
-	__builtin_printf("UH %ld, %ld, %ld, %ld\n", strlen(src), src_len, n, i);
 	if (n)
 		dest[i] = 0;
-	ENDTIME("strlcpy");
 	return (src_len);
 }
 
@@ -94,7 +87,6 @@ size_t	ft_strlcat(char *dest, const char *src, size_t n)
 	size_t	destlen;
 	size_t	srclen;
 
-	STARTTIME("strlcat");
 	i = 0;
 	j = 0;
 	srclen = ft_strlen(src);
@@ -112,7 +104,6 @@ size_t	ft_strlcat(char *dest, const char *src, size_t n)
 		j++;
 	}
 	dest[i] = 0;
-	ENDTIME("strlcat");
 	return (destlen + srclen);
 }
 
@@ -130,13 +121,11 @@ size_t	ft_strlen(const char *str)
 		s_int = *int_str++;
 		if ((s_int - HAS_ZERO_MASK) & ~s_int & HAS_ZERO_MASKN)
 		{
-			i = -1;
-			s_int = 0;
-			while (++i < (int)sizeof(s_int))
-				if ((const char *)(int_str - 1)[i] == 0)
-					s_int = (void *)(int_str - 1) - (void *)str + i;
-			if (s_int)
-				return (s_int);
+			i = 0;
+			while (i < (int)sizeof(s_int) && ((const char *)(int_str - 1))[i])
+				i++;
+			if (i != sizeof(s_int))
+				return (s_int = (const char *)(int_str - 1) - (const char *)str + i);
 		}
 	}
 	return ((const char *)int_str - str);
