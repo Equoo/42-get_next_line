@@ -6,7 +6,7 @@
 /*   By: dderny <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 12:25:54 by dderny            #+#    #+#             */
-/*   Updated: 2024/11/22 16:42:38 by dderny           ###   ########.fr       */
+/*   Updated: 2024/11/22 19:35:16 by dderny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,9 @@ char	*get_next_line(int fd)
 		return (NULL);
 	total = 0;
 	line = NULL;
-	if (!data.bufs[fd][data.pos[fd]])
+	if (data.states[fd] == 2)
+		return (NULL);
+	else if (!data.bufs[fd][data.pos[fd]])
 		line = read_line(fd, NULL, &data, &total);
 	else
 		line = read_buffer(fd, &data, &total);
@@ -38,14 +40,18 @@ char	*read_line(int fd, char *buffer, t_gnl_data *data, size_t *total)
 	newline = 0;
 	data->states[fd] = 0;
 	buffer = read_until_newline(fd, &newline, buffer, total, data);
-	if (buffer /* && newline != *total - 1 */)
+	if (buffer && (BUFFER_SIZE != 1) /* && newline != *total - 1 */)
 	{
 		ft_strlcpy(data->bufs[fd], buffer + newline + 1, BUFFER_SIZE + 1);
 		data->bufs[fd][*total - newline - 1] = 0;
-		//__builtin_printf("~~ %ld %s", ft_strlen(data->bufs[fd]), buffer);
-		data->pos[fd] = 0;
-		buffer[newline + 1] = 0;
+		if (newline || buffer[0] == '\n')
+			buffer[newline + 1] = 0;
+		if (*total % BUFFER_SIZE != 0)
+			data->states[fd] = 2;
 	}
+	else
+		data->states[fd] = 2;
+	data->pos[fd] = 0;
 	return (buffer);
 }
 
@@ -56,7 +62,7 @@ char	*read_until_newline(int fd, size_t *newline, char *buffer,
 	char	*last;
 
 	len = 0;
-	while (!len || (!*newline && buffer && buffer[0] != '\n'
+	while ((!len && !*total) || (!*newline && buffer && buffer[0] != '\n'
 			&& len == BUFFER_SIZE))
 	{
 		last = buffer;
@@ -64,7 +70,7 @@ char	*read_until_newline(int fd, size_t *newline, char *buffer,
 		if (!buffer)
 			return (NULL);
 		len = read(fd, buffer, BUFFER_SIZE);
-		if (len == -1 || !len)
+		if (len == -1 || (!len && !*total)) // return seulement si len 0 mais si aussi on a deja compte
 			return (free(buffer), NULL);
 		*total = *total + (size_t)len;
 		if (last)
@@ -123,7 +129,7 @@ int	main(void)
 	test3 = ft_calloc(1, 1);
 	// test5 = ft_calloc(1, 1);
 
-	int fd3 = open("test_4.txt", O_RDONLY);
+	int fd3 = open("test_1.txt", O_RDONLY);
 	int i = 0;
 	while (1)
 	{
