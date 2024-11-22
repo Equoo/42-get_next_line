@@ -6,7 +6,7 @@
 /*   By: dderny <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 12:25:54 by dderny            #+#    #+#             */
-/*   Updated: 2024/11/22 16:25:42 by dderny           ###   ########.fr       */
+/*   Updated: 2024/11/22 16:42:38 by dderny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ char	*read_line(int fd, char *buffer, t_gnl_data *data, size_t *total)
 	if (buffer /* && newline != *total - 1 */)
 	{
 		ft_strlcpy(data->bufs[fd], buffer + newline + 1, BUFFER_SIZE + 1);
+		data->bufs[fd][*total - newline - 1] = 0;
+		//__builtin_printf("~~ %ld %s", ft_strlen(data->bufs[fd]), buffer);
 		data->pos[fd] = 0;
 		buffer[newline + 1] = 0;
 	}
@@ -95,7 +97,8 @@ char	*read_buffer(int fd, t_gnl_data *data, size_t *total)
 	if (newline || !data->states[fd] || stored[0] == '\n')
 		data->pos[fd] = data->pos[fd] + *total;
 	else
-		buffer = read_line(fd, buffer, data, total);
+		return (read_line(fd, buffer, data, total));
+	//__builtin_printf("-- %s", buffer);
 	return (buffer);
 }
 
@@ -154,7 +157,7 @@ int	main(void)
 		else
 			break ;
 	}
-	__builtin_printf("%s", test3);
+	//__builtin_printf("%s", test3);
 
 	free(test3);
 	close(fd3);
