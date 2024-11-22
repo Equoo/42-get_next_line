@@ -1,10 +1,4 @@
--- 1\\ 
-
--- 46\\ year after it is sold; within a full year may
-
--- 14\\ he redeem it.
-
--- 1\\ 
-
-
-5
+L'utilisation de variables statiques présente également des avantages significatifs dans la conception et
+la fonctionnalité du code. Tout d'abord, les variables statiques offrent la possibilité de maintenir l'état entre les appels de fonctions.
+Cette caractéristique permet à ces variables de fournir une mémoire persistante pour les données,
+facilitant la conservation d'informations importantes tout au long de l'exécution du programme.

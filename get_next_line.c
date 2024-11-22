@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dderny <dderny@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: dderny <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/16 18:17:33 by dderny            #+#    #+#             */
-/*   Updated: 2024/11/21 23:51:16 by dderny           ###   ########.fr       */
+/*   Created: 2024/11/22 12:25:54 by dderny            #+#    #+#             */
+/*   Updated: 2024/11/22 13:20:46 by dderny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	*get_next_line(int fd)
 		return (NULL);
 	total = 0;
 	line = NULL;
-	if (!*data.bufs[fd])
+	if (!data.bufs[fd][data.pos[fd]])
 		line = read_line(fd, NULL, &data, &total);
 	else
 		line = read_buffer(fd, &data, &total);
@@ -36,11 +36,13 @@ char	*read_line(int fd, char *buffer, t_gnl_data *data, size_t *total)
 	size_t	newline;
 
 	newline = 0;
+	data->states[fd] = 0;
 	buffer = read_until_newline(fd, &newline, buffer, total, data);
-	if (buffer && newline != *total - 1)
+	if (buffer /* && newline != *total - 1 */)
 	{
 		ft_strlcpy(data->bufs[fd], buffer + newline + 1, BUFFER_SIZE + 1);
-		if (newline)
+		data->pos[fd] = 0;
+		if (newline || buffer[newline] == '\n')
 			buffer[newline + 1] = 0;
 	}
 	return (buffer);
@@ -53,7 +55,8 @@ char	*read_until_newline(int fd, size_t *newline, char *buffer,
 	char	*last;
 
 	len = 0;
-	while (!len || (!*newline && len == BUFFER_SIZE))
+	while (!len || (!*newline && buffer && buffer[0] != '\n'
+			&& len == BUFFER_SIZE))
 	{
 		last = buffer;
 		buffer = ft_calloc(BUFFER_SIZE + 9, sizeof(char));
@@ -76,30 +79,31 @@ char	*read_until_newline(int fd, size_t *newline, char *buffer,
 
 char	*read_buffer(int fd, t_gnl_data *data, size_t *total)
 {
-	const size_t	newline = get_newline(data->bufs[fd]);
+	const size_t	newline = get_newline(data->bufs[fd] + data->pos[fd]);
+	char			*stored;
 	char			*buffer;
-	//char			*tmp;
 
+	// char			*tmp;
 	buffer = NULL;
+	stored = data->bufs[fd] + data->pos[fd];
 	*total = newline + 1;
-	if (!newline && data->bufs[fd][0] != '\n')
-		*total = ft_strlen(data->bufs[fd]);
+	if (!newline && stored[0] != '\n')
+		*total = ft_strlen(stored);
 	buffer = ft_calloc(*total + 9, sizeof(char));
 	if (!buffer)
 		return (NULL);
-	ft_strlcpy(buffer, data->bufs[fd], *total + 1);
-	__builtin_printf("-- %ld\\\\ %s\n", *total, buffer);
-	if (newline || !data->states[fd])
-		ft_strlcpy(data->bufs[fd], data->bufs[fd] + *total, BUFFER_SIZE + 1);
+	ft_strlcpy(buffer, stored, *total + 1);
+	if (newline || !data->states[fd] || stored[0] == '\n')
+		data->pos[fd] = data->pos[fd] + *total;
 	else
 	{
-		//tmp = buffer;
+		// tmp = buffer;
 		buffer = read_line(fd, buffer, data, total);
+		return (buffer);
 		/* if (tmp)
 		{	__builtin_printf("%s;\n", tmp);
 			free(tmp);} */
 	}
-	//__builtin_printf("--{{ %s ^sep^ %s }}--", buffer, data->bufs[fd]);
 	return (buffer);
 }
 
@@ -112,10 +116,8 @@ size_t	get_newline(char *str)
 		i++;
 	if ((unsigned char)str[i] != '\n')
 		return (0);
-	//__builtin_printf("== %li ||  %s\n", i, str);
 	return (i);
 }
-
 
 #include <fcntl.h>
 
@@ -126,7 +128,7 @@ int	main(void)
 	test3 = ft_calloc(1, 1);
 	// test5 = ft_calloc(1, 1);
 
-	int fd3 = open("test_4.txt", O_RDONLY);
+	int fd3 = open("test_1.txt", O_RDONLY);
 	int i = 0;
 	while (1)
 	{
@@ -147,21 +149,20 @@ int	main(void)
 			i = 1000;
 		} */
 
-		//if (tmp)
+		// if (tmp)
 		//	test1 = ft_strjoin(test1, tmp);
-		//if (tmp2)
+		// if (tmp2)
 		//	test2 = ft_strjoin(test2, tmp2);
 		if (tmp3)
 		{
-			//test3 = ft_strjoin(test3, tmp3);
+			__builtin_printf("%s", tmp3);
+			free(tmp3);
+			// test3 = ft_strjoin(test3, tmp3);
 		}
-		if (!tmp3 /*&& !tmp2 && !tmp3*/)
+		else
 			break ;
-		free(tmp3);
 	}
-	//__builtin_printf("%s\n\n", test1);
-	//__builtin_printf("%s\n\n", test2);
-	__builtin_printf("%s\n%i\n", test3, i);
+	__builtin_printf("%s", test3);
 
 	free(test3);
 	close(fd3);
