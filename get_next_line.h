@@ -6,7 +6,7 @@
 /*   By: dderny <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 12:25:43 by dderny            #+#    #+#             */
-/*   Updated: 2024/11/22 13:17:54 by dderny           ###   ########.fr       */
+/*   Updated: 2024/11/22 16:18:33 by dderny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 # include "time_lib.h"
 typedef struct s_gnl_data
 {
-	char	bufs[MAX_FILES][BUFFER_SIZE + 1];
+	char	bufs[MAX_FILES][BUFFER_SIZE + 9];
 	size_t	pos[MAX_FILES];
 	int		states[MAX_FILES];
 }			t_gnl_data;

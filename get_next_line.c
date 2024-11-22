@@ -6,7 +6,7 @@
 /*   By: dderny <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 12:25:54 by dderny            #+#    #+#             */
-/*   Updated: 2024/11/22 13:20:46 by dderny           ###   ########.fr       */
+/*   Updated: 2024/11/22 16:25:42 by dderny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,7 @@ char	*read_line(int fd, char *buffer, t_gnl_data *data, size_t *total)
 	{
 		ft_strlcpy(data->bufs[fd], buffer + newline + 1, BUFFER_SIZE + 1);
 		data->pos[fd] = 0;
-		if (newline || buffer[newline] == '\n')
-			buffer[newline + 1] = 0;
+		buffer[newline + 1] = 0;
 	}
 	return (buffer);
 }
@@ -64,7 +63,7 @@ char	*read_until_newline(int fd, size_t *newline, char *buffer,
 			return (NULL);
 		len = read(fd, buffer, BUFFER_SIZE);
 		if (len == -1 || !len)
-			return (NULL);
+			return (free(buffer), NULL);
 		*total = *total + (size_t)len;
 		if (last)
 			buffer = ft_strjoin(last, buffer);
@@ -96,14 +95,7 @@ char	*read_buffer(int fd, t_gnl_data *data, size_t *total)
 	if (newline || !data->states[fd] || stored[0] == '\n')
 		data->pos[fd] = data->pos[fd] + *total;
 	else
-	{
-		// tmp = buffer;
 		buffer = read_line(fd, buffer, data, total);
-		return (buffer);
-		/* if (tmp)
-		{	__builtin_printf("%s;\n", tmp);
-			free(tmp);} */
-	}
 	return (buffer);
 }
 
@@ -128,7 +120,7 @@ int	main(void)
 	test3 = ft_calloc(1, 1);
 	// test5 = ft_calloc(1, 1);
 
-	int fd3 = open("test_1.txt", O_RDONLY);
+	int fd3 = open("test_4.txt", O_RDONLY);
 	int i = 0;
 	while (1)
 	{
