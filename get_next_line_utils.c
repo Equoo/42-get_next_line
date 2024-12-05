@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: dderny <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/16 18:17:33 by dderny            #+#    #+#             */
-/*   Updated: 2024/11/20 11:53:23y dderny           ###   ########.fr       */
+/*   Created: 2024/11/27 12:53:46 by dderny            #+#    #+#             */
+/*   Updated: 2024/11/27 13:54:36 by dderny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ char	*ft_strjoin(char *s1, char *s2)
 	total = ft_strlen(s1) + ft_strlen(s2) + 1;
 	str = ft_calloc(total + 8, sizeof(char));
 	if (!str)
-		return (NULL);
+		return (free(s1), free(s2), NULL);
 	ft_strlcpy(str, s1, total);
 	ft_strlcat(str, s2, total);
 	free(s1);
@@ -64,12 +64,6 @@ size_t	ft_strlcpy(char *dest, const char *src, size_t n)
 	if (!src_len)
 		return (0);
 	i = 0;
-	/* while (i < src_len / sizeof(src_len) - 1 && i < n / sizeof(src_len) - 1)
-	{
-		((size_t *)dest)[i] = ((size_t *)src)[i];
-		i++;
-	}
-	i = i * sizeof(src_len); */
 	while (src[i] && i + 1 < n)
 	{
 		dest[i] = src[i];
@@ -122,10 +116,11 @@ size_t	ft_strlen(const char *str)
 		if ((s_int - HAS_ZERO_MASK) & ~s_int & HAS_ZERO_MASKN)
 		{
 			i = 0;
-			while (i < (int)sizeof(s_int) && ((const char *)(int_str - 1))[i])
+			while (i < (int) sizeof(s_int) && ((const char *)(int_str - 1))[i])
 				i++;
 			if (i != sizeof(s_int))
-				return (s_int = (const char *)(int_str - 1) - (const char *)str + i);
+				return (s_int = (const char *)(int_str - 1) - (const char *)str
+					+ i);
 		}
 	}
 	return ((const char *)int_str - str);

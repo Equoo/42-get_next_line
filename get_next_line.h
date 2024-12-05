@@ -6,7 +6,7 @@
 /*   By: dderny <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 12:25:43 by dderny            #+#    #+#             */
-/*   Updated: 2024/11/22 16:18:33 by dderny           ###   ########.fr       */
+/*   Updated: 2024/11/27 15:37:03 by dderny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,28 +16,30 @@
 # include <stdlib.h>
 # include <unistd.h>
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 1024
+#  define BUFFER_SIZE 42
 # endif
 # define MAX_FILES 1024
 # define HAS_ZERO_MASK 0x1010101010101010
 # define HAS_ZERO_MASKN 0x8080808080808080
 
-# include "time_lib.h"
 typedef struct s_gnl_data
 {
 	char	bufs[MAX_FILES][BUFFER_SIZE + 9];
 	size_t	pos[MAX_FILES];
 	int		states[MAX_FILES];
+	size_t	total;
+	size_t	newline;
+	int		fd;
 }			t_gnl_data;
 
 char		*get_next_line(int fd);
 
-char		*read_line(int fd, char *buffer, t_gnl_data *data, size_t *total);
+char		*read_line(int fd, t_gnl_data *data, char *buffer);
 
-char		*read_until_newline(int fd, size_t *newline, char *buffer,
-				size_t *total, t_gnl_data *data);
+char		*read_until_newline(t_gnl_data *data, char *buffer, ssize_t *len,
+				char **last);
 
-char		*read_buffer(int fd, t_gnl_data *data, size_t *total);
+char		*read_buffer(t_gnl_data *data);
 
 size_t		get_newline(char *str);
 

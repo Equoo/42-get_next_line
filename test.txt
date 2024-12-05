@@ -1,0 +1,172 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                Welcome to Francinette, a 42 tester framework!                ║
+╚═══════════════════════╦══════════════════════════════╦═══════════════════════╝
+                        ║         get_next_line        ║
+                        ╚══════════════════════════════╝
+⠋ Preparing framework⠙ Preparing framework⠹ Preparing framework✔ Preparing framework
+⠋ Executing: norminette⠙ Executing: norminette⠹ Executing: norminette⠸ Executing: norminette✖ Executing: norminette
+get_next_line.h: OK!
+get_next_line_utils.c: Error!
+Error: WRONG_SCOPE_COMMENT  (line:  67, col:   5):	Comment is invalid in this scope
+get_next_line.c: OK!
+
+ℹ Running tests: gnlTester (https://github.com/Tripouille/gnlTester)
+[34m[Mandatory]
+[37m[BUFFER_SIZE = 1]: [0m
+[37mInvalid fd: [32m1.OK [32m2.OK [32m3.OK [0m
+==157684== 10 bytes in 1 blocks are definitely lost in loss record 1 of 2
+==157684==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==157684==    by 0x4086F7: ft_calloc (get_next_line_utils.c:27)
+==157684==    by 0x408338: read_until_newline (get_next_line.c:70)
+==157684==    by 0x408241: read_line (get_next_line.c:48)
+==157684==    by 0x4081AE: get_next_line (get_next_line.c:31)
+==157684==    by 0x402DF6: gnl(int, char const*) (gnl.cpp:20)
+==157684==    by 0x404D1D: main (mandatory.cpp:29)
+==157684== 
+==157684== 10 bytes in 1 blocks are definitely lost in loss record 2 of 2
+==157684==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==157684==    by 0x4086F7: ft_calloc (get_next_line_utils.c:27)
+==157684==    by 0x408338: read_until_newline (get_next_line.c:70)
+==157684==    by 0x408241: read_line (get_next_line.c:48)
+==157684==    by 0x4081AE: get_next_line (get_next_line.c:31)
+==157684==    by 0x402DF6: gnl(int, char const*) (gnl.cpp:20)
+==157684==    by 0x404D3F: main (mandatory.cpp:29)
+==157684== 
+[37mfiles/empty: [32m1.OK [32m2.OK [0m
+[37mfiles/nl: [32m1.OK [32m2.OK [0m
+[37mfiles/41_no_nl: [32m1.OK [32m2.OK [0m
+[37mfiles/41_with_nl: [32m1.OK ==157688== Invalid read of size 1
+==157688==    at 0x484FBD4: strcmp (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==157688==    by 0x402E2A: gnl(int, char const*) (gnl.cpp:24)
+==157688==    by 0x40594C: main (mandatory.cpp:50)
+==157688==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==157688== 
+[93m2.SIGSEGV
+[37mfiles/42_no_nl: [32m1.OK [32m2.OK [0m
+[37mfiles/42_with_nl: [32m1.OK ==157690== Invalid read of size 1
+==157690==    at 0x484FBD4: strcmp (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==157690==    by 0x402E2A: gnl(int, char const*) (gnl.cpp:24)
+==157690==    by 0x405F34: main (mandatory.cpp:61)
+==157690==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==157690== 
+[93m2.SIGSEGV
+[37mfiles/43_no_nl: [32m1.OK [32m2.OK [0m
+[37mfiles/43_with_nl: [32m1.OK ==157692== Invalid read of size 1
+==157692==    at 0x484FBD4: strcmp (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==157692==    by 0x402E2A: gnl(int, char const*) (gnl.cpp:24)
+==157692==    by 0x406526: main (mandatory.cpp:77)
+==157692==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==157692== 
+[93m2.SIGSEGV
+[37mfiles/multiple_nlx5: [32m1.OK ==157693== Invalid read of size 1
+==157693==    at 0x484FBD4: strcmp (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==157693==    by 0x402E2A: gnl(int, char const*) (gnl.cpp:24)
+==157693==    by 0x406823: main (mandatory.cpp:83)
+==157693==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==157693== 
+[93m2.SIGSEGV
+[37mfiles/multiple_line_no_nl: [32m1.OK ==157694== Invalid read of size 1
+==157694==    at 0x484FBD4: strcmp (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==157694==    by 0x402E2A: gnl(int, char const*) (gnl.cpp:24)
+==157694==    by 0x406B56: main (mandatory.cpp:92)
+==157694==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==157694== 
+[93m2.SIGSEGV
+[37mfiles/multiple_line_with_nl: [32m1.OK ==157695== Invalid read of size 1
+==157695==    at 0x484FBD4: strcmp (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==157695==    by 0x402E2A: gnl(int, char const*) (gnl.cpp:24)
+==157695==    by 0x406E89: main (mandatory.cpp:101)
+==157695==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==157695== 
+[93m2.SIGSEGV
+[37mfiles/alternate_line_nl_no_nl: [32m1.OK ==157696== Invalid read of size 1
+==157696==    at 0x484FBD4: strcmp (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==157696==    by 0x402E2A: gnl(int, char const*) (gnl.cpp:24)
+==157696==    by 0x4071BC: main (mandatory.cpp:110)
+==157696==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==157696== 
+[93m2.SIGSEGV
+[37mfiles/alternate_line_nl_with_nl: [32m1.OK ==157697== Invalid read of size 1
+==157697==    at 0x484FBD4: strcmp (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==157697==    by 0x402E2A: gnl(int, char const*) (gnl.cpp:24)
+==157697==    by 0x407537: main (mandatory.cpp:123)
+==157697==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==157697== 
+[93m2.SIGSEGV
+[37mfiles/big_line_no_nl: [32m1.OK [32m2.OK [0m
+[37mfiles/big_line_with_nl: [32m1.OK [32m2.OK [0m
+[37mstdin: [32m1.OK ==157756== Invalid read of size 1
+==157756==    at 0x484FBD4: strcmp (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==157756==    by 0x402E2A: gnl(int, char const*) (gnl.cpp:24)
+==157756==    by 0x407E86: main (mandatory.cpp:145)
+==157756==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==157756== 
+[93m2.SIGSEGV
+
+[37m[BUFFER_SIZE = 42]: [0m
+[37mInvalid fd: [32m1.OK [32m2.OK [32m3.OK [0m
+==157781== 51 bytes in 1 blocks are definitely lost in loss record 1 of 2
+==157781==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==157781==    by 0x40880C: ft_calloc (get_next_line_utils.c:27)
+==157781==    by 0x408441: read_until_newline (get_next_line.c:70)
+==157781==    by 0x408279: read_line (get_next_line.c:48)
+==157781==    by 0x4081E6: get_next_line (get_next_line.c:31)
+==157781==    by 0x402DF6: gnl(int, char const*) (gnl.cpp:20)
+==157781==    by 0x404D1D: main (mandatory.cpp:29)
+==157781== 
+==157781== 51 bytes in 1 blocks are definitely lost in loss record 2 of 2
+==157781==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==157781==    by 0x40880C: ft_calloc (get_next_line_utils.c:27)
+==157781==    by 0x408441: read_until_newline (get_next_line.c:70)
+==157781==    by 0x408279: read_line (get_next_line.c:48)
+==157781==    by 0x4081E6: get_next_line (get_next_line.c:31)
+==157781==    by 0x402DF6: gnl(int, char const*) (gnl.cpp:20)
+==157781==    by 0x404D3F: main (mandatory.cpp:29)
+==157781== 
+[37mfiles/empty: [32m1.OK [32m2.OK [0m
+[37mfiles/nl: [32m1.OK [32m2.OK [0m
+[37mfiles/41_no_nl: [32m1.OK [32m2.OK [0m
+[37mfiles/41_with_nl: [32m1.OK [32m2.OK [32m3.OK [0m
+[37mfiles/42_no_nl: [32m1.OK [32m2.OK [0m
+[37mfiles/42_with_nl: [32m1.OK [32m2.OK [32m3.OK [0m
+[37mfiles/43_no_nl: [32m1.OK [32m2.OK [0m
+[37mfiles/43_with_nl: [32m1.OK [32m2.OK [32m3.OK [0m
+[37mfiles/multiple_nlx5: [32m1.OK [32m2.OK [32m3.OK [32m4.OK [32m5.OK [32m6.OK [0m
+[37mfiles/multiple_line_no_nl: [32m1.OK [32m2.OK [32m3.OK [32m4.OK [32m5.OK [32m6.OK [0m
+[37mfiles/multiple_line_with_nl: [32m1.OK [32m2.OK [32m3.OK [32m4.OK [32m5.OK [32m6.OK [0m
+[37mfiles/alternate_line_nl_no_nl: [32m1.OK [32m2.OK [32m3.OK [32m4.OK [32m5.OK [32m6.OK [32m7.OK [32m8.OK [32m9.OK [32m10.OK [0m
+[37mfiles/alternate_line_nl_with_nl: [32m1.OK [32m2.OK [32m3.OK [32m4.OK [32m5.OK [32m6.OK [32m7.OK [32m8.OK [32m9.OK [32m10.OK [0m
+[37mfiles/big_line_no_nl: [32m1.OK [32m2.OK [0m
+[37mfiles/big_line_with_nl: [32m1.OK [32m2.OK [0m
+[37mstdin: [32m1.OK [32m2.OK [32m3.OK [32m4.OK [32m5.OK [32m6.OK [32m7.OK [32m8.OK [32m9.OK [32m10.OK [0m
+
+valgrind: mmap(0x412000, 1650085888) failed in UME with error 22 (Invalid argument).
+valgrind: this can be caused by executables with very large text, data or bss segments.
+make: *** [Makefile:48: 10Mmandatory] Error 1
+
+To see the tests open: /home/dderny/francinette/tests/get_next_line/gnlTester/tests/mandatory.cpp
+
+ℹ Running tests: fsoares (my own tests)
+[1;35mBUFFER_SIZE[0m: 1
+[0;34mInvalid fd          [0m: [0;32m1.OK [0m[0;32m2.OK [0m[0;32m3.OK [0m[0;31m4_LEAKS.KO [0m
+Segmentation fault (core dumped)
+make: [Makefile:23: mandatory] Error 139 (ignored)
+[1;35mBUFFER_SIZE[0m: 10
+[0;34mInvalid fd          [0m: [0;32m1.OK [0m[0;32m2.OK [0m[0;32m3.OK [0m[0;31m4_LEAKS.KO [0m
+Segmentation fault (core dumped)
+make: [Makefile:24: mandatory] Error 139 (ignored)
+[1;35mBUFFER_SIZE[0m: 1000000
+[0;34mInvalid fd          [0m: [0;32m1.OK [0m[0;32m2.OK [0m[0;32m3.OK [0m[0;31m4_LEAKS.KO [0m
+Segmentation fault (core dumped)
+make: [Makefile:25: mandatory] Error 139 (ignored)
+⠋ Processing output⠙ Processing outputErrors found:
+
+To see the tests open: /home/dderny/francinette/tests/get_next_line/fsoares/tester.c
+
+
+Summary: no bonus
+
+Norminette Errors: get_next_line_utils.c
+
+Failed tests: fsoares, gnlTester
+
