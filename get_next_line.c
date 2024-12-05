@@ -6,7 +6,7 @@
 /*   By: dderny <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 12:25:54 by dderny            #+#    #+#             */
-/*   Updated: 2024/12/05 18:28:03 by dderny           ###   ########.fr       */
+/*   Updated: 2024/12/05 18:29:42 by dderny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ char	*read_until_newline(t_gnl_data *data, char *buffer, ssize_t *len,
 		data->states[data->fd] = 2;
 		return (free(buffer), *last);
 	}
-	buffer[len] = 0;
+	buffer[*len] = 0;
 	data->total += *(size_t *)len;
 	if (*last)
 		buffer = ft_strjoin(*last, buffer);
