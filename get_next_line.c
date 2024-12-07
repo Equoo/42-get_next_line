@@ -6,7 +6,7 @@
 /*   By: dderny <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 12:25:54 by dderny            #+#    #+#             */
-/*   Updated: 2024/12/05 18:31:44 by dderny           ###   ########.fr       */
+/*   Updated: 2024/12/07 15:32:56 by dderny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,44 +14,57 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-char	*get_next_line(int fd)
+t_gnl_data 	*getfddata(int fd)
 {
-	static t_gnl_data	data;
-	char				*line;
+	static t_gnl_data	data[MAX_FILES];
+	int	i;
 
 	if (fd < 0)
 		return (NULL);
-	data.total = 0;
-	data.newline = 0;
-	data.fd = fd;
-	line = NULL;
-	if (BUFFER_SIZE != 1 && data.states[fd] == 2)
+	i = 0;
+	while (i < MAX_FILES && data[i].fd != fd)
+		i++;
+	if (i == MAX_FILES)
+	{
+		i = 0;
+		while (data[i].state != GNL_UNUSED)
+			i++;
+		if (i == MAX_FILES)
+			return (NULL);
+		data[i] = (t_gnl_data){.fd = fd, .state = GNL_INUSE};
+	}
+	return (&data[i]);
+}
+
+char	*get_next_line(int fd)
+{
+	t_gnl_data			*data;
+	char				*line;
+
+	data = getfddata(fd);
+	if (!data)
 		return (NULL);
-	else if (!data.bufs[fd][data.pos[fd]])
-		line = read_line(data.fd, &data, NULL);
+	line = NULL;
+	if (!data->buf[data->pos])
+		line = read_line(&datafd, NULL);
 	else
-		line = read_buffer(&data);
+		line = read_buffer(&datafd);
 	if (!line)
 	{
-		data.pos[fd] = 0;
-		data.states[fd] = 0;
-		data.bufs[fd][0] = 0;
+		data = (t_gnl_data){.state = GNL_UNUSED, .pos = 0, .fd = 0}
+		//data->buf[0] = 0;
 	}
 	return (line);
 }
 
-char	*read_line(int fd, t_gnl_data *data, char *buffer)
+char	*read_line(t_gnl_data *data, char *buffer)
 {
-	ssize_t	len;
-	char	*last;
+	t_gnl_data rdta;
 
-	data->newline = 0;
-	data->states[fd] = 0;
-	len = 0;
-	last = buffer;
-	while (data->states[fd] != 2 && !data->newline && (!buffer || (buffer
+	data->state = GNL_INUSE;
+	while (data->state != GNL_ENDED && !rdta->newline && (!buffer || (buffer
 				&& buffer[0] != '\n')))
-		buffer = read_until_newline(data, buffer, &len, &last);
+		buffer = read_until_newline(data, buffer, );
 	if (!buffer)
 		return (NULL);
 	if (len == BUFFER_SIZE)
@@ -69,34 +82,28 @@ char	*read_line(int fd, t_gnl_data *data, char *buffer)
 	return (buffer);
 }
 
-char	*read_until_newline(t_gnl_data *data, char *buffer, ssize_t *len,
-		char **last)
+char	*read_until_newline(t_gnl_data *data, char *buffer, t_gnl_read *rdta)
 {
-	*last = buffer;
+	data->state = GNL_ENDED;
+	rdta->last = buffer;
 	buffer = ft_calloc(BUFFER_SIZE + 9, sizeof(char));
 	if (!buffer)
-	{
-		data->states[data->fd] = 2;
 		return (NULL);
-	}
-	*len = read(data->fd, buffer, BUFFER_SIZE);
-	if (!*len)
+	rdta->len = read(data->fd, buffer, BUFFER_SIZE);
+	if (!rdta->len || rdta->len == -1)
 	{
-		data->states[data->fd] = 2;
-		return (free(buffer), *last);
+		if (rdta->len == -1 && rdta->last)
+			free(rdta->last);
+		return (free(buffer), rdta->last);
 	}
-	//buffer[*len] = 0;
-	data->total += *(size_t *)len;
-	if (*last)
-		buffer = ft_strjoin(*last, buffer);
-	if (!buffer || *len == -1)
-	{
-		if (*len == -1)
-			free(buffer);
+	rdta->total += (size_t)rdta->len;
+	if (rdta->last)
+		buffer = ft_strjoin(rdta->last, buffer);
+	if (!buffer)
 		data->states[data->fd] = 2;
-		return (NULL);
-	}
-	data->newline = get_newline(buffer);
+	else
+		data->newline = get_newline(buffer);
+	data->state = GNL_INUSE;
 	return (buffer);
 }
 

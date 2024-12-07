@@ -6,7 +6,7 @@
 /*   By: dderny <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 12:53:46 by dderny            #+#    #+#             */
-/*   Updated: 2024/11/27 13:54:36 by dderny           ###   ########.fr       */
+/*   Updated: 2024/12/07 14:20:43 by dderny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,18 @@ size_t	ft_strlcat(char *dest, const char *src, size_t n)
 	dest[i] = 0;
 	return (destlen + srclen);
 }
+
+/* size_t	ft_strlen(const char *str)
+{
+	const char	*const_str;
+
+	if (!str)
+		return (0);
+	const_str = str;
+	while (*const_str != '\0')
+		++const_str;
+	return (const_str - str);
+} */
 
 size_t	ft_strlen(const char *str)
 {
