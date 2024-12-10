@@ -6,7 +6,7 @@
 /*   By: dderny <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 12:25:54 by dderny            #+#    #+#             */
-/*   Updated: 2024/12/10 15:06:30 by dderny           ###   ########.fr       */
+/*   Updated: 2024/12/10 16:56:18 by dderny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,8 @@ char	*read_line(t_gnl_data *data, char *buffer)
 	if (BUFFER_SIZE != 1)
 	{
 		ft_strlcpy(data->buf, buffer + rdta.newline + 1, BUFFER_SIZE + 1);
-		data->buf[rdta.total - rdta.newline - 1] = 0;
+		if (rdta.total - rdta.newline - 1 < BUFFER_SIZE + 1)
+			data->buf[rdta.total - rdta.newline - 1] = 0;
 		if (rdta.newline || buffer[0] == '\n')
 			buffer[rdta.newline + 1] = 0;
 	}
@@ -139,51 +140,51 @@ size_t	get_newline(char *str)
 	return (i);
 }
 
-#include <fcntl.h>
+// #include <fcntl.h>
 
-int	main(void)
-{
-	char	*test3;
-	int		fd3;
-	int		i;
-	char	*tmp3;
+// int	main(void)
+// {
+// 	char	*test3;
+// 	int		fd3;
+// 	int		i;
+// 	char	*tmp3;
 
-	test3 = NULL;
-	// char *test5 = NULL;
-	test3 = ft_calloc(1, 1);
-	// test5 = ft_calloc(1, 1);
-	fd3 = open("test_4.txt", O_RDONLY);
-	i = 0;
-	while (1)
-	{
-		i++;
-		tmp3 = get_next_line(fd3);
-		// if (tmp)
-		//	test1 = ft_strjoin(test1, tmp);
-		// if (tmp2)
-		//	test2 = ft_strjoin(test2, tmp2);
-		if (tmp3)
-		{
-			__builtin_printf("%s", tmp3);
-			free(tmp3);
-			// test3 = ft_strjoin(test3, tmp3);
-		}
-		else
-			break ;
-	}
-	close(fd3);
-	free(test3);
-	return (0);
-}
+// 	test3 = NULL;
+// 	// char *test5 = NULL;
+// 	test3 = ft_calloc(1, 1);
+// 	// test5 = ft_calloc(1, 1);
+// 	fd3 = open("test_4.txt", O_RDONLY);
+// 	i = 0;
+// 	while (1)
+// 	{
+// 		i++;
+// 		tmp3 = get_next_line(fd3);
+// 		// if (tmp)
+// 		//	test1 = ft_strjoin(test1, tmp);
+// 		// if (tmp2)
+// 		//	test2 = ft_strjoin(test2, tmp2);
+// 		if (tmp3)
+// 		{
+// 			__builtin_printf("%s", tmp3);
+// 			free(tmp3);
+// 			// test3 = ft_strjoin(test3, tmp3);
+// 		}
+// 		else
+// 			break ;
+// 	}
+// 	close(fd3);
+// 	free(test3);
+// 	return (0);
+// }
 
-/* 	i = 0;
-		while (i < 3)
-		{
-			i++;
-			char *tmp = get_next_line(0);
-			if (tmp)
-				test5 = ft_strjoin(test5, tmp);
-			else
-				break ;
-		} */
-//__builtin_printf("sayedto: %s\n", test5);
+// /* 	i = 0;
+// 		while (i < 3)
+// 		{
+// 			i++;
+// 			char *tmp = get_next_line(0);
+// 			if (tmp)
+// 				test5 = ft_strjoin(test5, tmp);
+// 			else
+// 				break ;
+// 		} */
+// //__builtin_printf("sayedto: %s\n", test5);
