@@ -6,7 +6,7 @@
 /*   By: dderny <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 12:25:43 by dderny            #+#    #+#             */
-/*   Updated: 2024/12/07 15:13:37 by dderny           ###   ########.fr       */
+/*   Updated: 2024/12/10 15:00:46 by dderny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 # include <unistd.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 42
+#  define BUFFER_SIZE 1
 # endif
 # define MAX_FILES 128
 
@@ -50,11 +50,8 @@ typedef struct s_gnl_data
 
 char			*get_next_line(int fd);
 
-char			*read_line(int fd, t_gnl_data *data, char *buffer);
-
-char			*read_until_newline(t_gnl_data *data, char *buffer,
-					ssize_t *len, char **last);
-
+char			*read_line(t_gnl_data *data, char *buffer);
+char			*read_until_newline(t_gnl_data *data, char *buffer, t_gnl_read *rdta);
 char			*read_buffer(t_gnl_data *data);
 
 size_t			get_newline(char *str);
