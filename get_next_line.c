@@ -6,7 +6,7 @@
 /*   By: dderny <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 12:25:54 by dderny            #+#    #+#             */
-/*   Updated: 2024/12/10 16:56:18 by dderny           ###   ########.fr       */
+/*   Updated: 2024/12/11 15:29:39 by dderny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ char	*get_next_line(int fd)
 		line = read_buffer(data);
 	if (!line)
 		*data = (t_gnl_data){.state = GNL_UNUSED, .pos = 0, .fd = 0};
+	//__builtin_printf("\n'%s'\n", line);
 	return (line);
 }
 
@@ -85,15 +86,21 @@ char	*read_until_newline(t_gnl_data *data, char *buffer, t_gnl_read *rdta)
 {
 	data->state = GNL_ENDED;
 	rdta->last = buffer;
-	buffer = ft_calloc(BUFFER_SIZE + 9, sizeof(char));
+	buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
 	if (!buffer)
-		return (NULL);
-	rdta->len = read(data->fd, buffer, BUFFER_SIZE);
-	if (!rdta->len || rdta->len == -1)
 	{
-		if (rdta->len == -1 && rdta->last)
+		if (rdta->last)
 			free(rdta->last);
+		return (NULL);
+	}
+	rdta->len = read(data->fd, buffer, BUFFER_SIZE);
+	if (!rdta->len)
 		return (free(buffer), rdta->last);
+	if (rdta->len == -1)
+	{
+		if (rdta->last)
+			free(rdta->last);
+		return (free(buffer), NULL);
 	}
 	rdta->total += (size_t)rdta->len;
 	if (rdta->last)
@@ -104,6 +111,7 @@ char	*read_until_newline(t_gnl_data *data, char *buffer, t_gnl_read *rdta)
 	data->state = GNL_INUSE;
 	return (buffer);
 }
+
 
 char	*read_buffer(t_gnl_data *data)
 {
@@ -117,11 +125,11 @@ char	*read_buffer(t_gnl_data *data)
 	rdta.total = rdta.newline + 1;
 	if (!rdta.newline && rdta.last[0] != '\n')
 		rdta.total = ft_strlen(rdta.last);
-	buffer = ft_calloc(rdta.total + 9, sizeof(char));
+	buffer = ft_calloc(rdta.total + 1, sizeof(char));
 	if (!buffer)
 		return (NULL);
 	ft_strlcpy(buffer, rdta.last, rdta.total + 1);
-	if (rdta.newline /* || data->state == GNL_INUSE */ || rdta.last[0] == '\n')
+	if (rdta.newline || rdta.last[0] == '\n')
 		data->pos = data->pos + rdta.total;
 	else
 		return (read_line(data, buffer));
@@ -140,51 +148,51 @@ size_t	get_newline(char *str)
 	return (i);
 }
 
-// #include <fcntl.h>
+#include <fcntl.h>
 
-// int	main(void)
-// {
-// 	char	*test3;
-// 	int		fd3;
-// 	int		i;
-// 	char	*tmp3;
+int	main(void)
+{
+	char	*test3;
+	int		fd3;
+	int		i;
+	char	*tmp3;
 
-// 	test3 = NULL;
-// 	// char *test5 = NULL;
-// 	test3 = ft_calloc(1, 1);
-// 	// test5 = ft_calloc(1, 1);
-// 	fd3 = open("test_4.txt", O_RDONLY);
-// 	i = 0;
-// 	while (1)
-// 	{
-// 		i++;
-// 		tmp3 = get_next_line(fd3);
-// 		// if (tmp)
-// 		//	test1 = ft_strjoin(test1, tmp);
-// 		// if (tmp2)
-// 		//	test2 = ft_strjoin(test2, tmp2);
-// 		if (tmp3)
-// 		{
-// 			__builtin_printf("%s", tmp3);
-// 			free(tmp3);
-// 			// test3 = ft_strjoin(test3, tmp3);
-// 		}
-// 		else
-// 			break ;
-// 	}
-// 	close(fd3);
-// 	free(test3);
-// 	return (0);
-// }
+	test3 = NULL;
+	// char *test5 = NULL;
+	test3 = ft_calloc(1, 1);
+	// test5 = ft_calloc(1, 1);
+	fd3 = open("1char.txt", O_RDONLY);
+	i = 0;
+	while (1)
+	{
+		i++;
+		tmp3 = get_next_line(fd3);
+		// if (tmp)
+		//	test1 = ft_strjoin(test1, tmp);
+		// if (tmp2)
+		//	test2 = ft_strjoin(test2, tmp2);
+		__builtin_printf("-%s", tmp3);
+		if (tmp3)
+		{
+			free(tmp3);
+			// test3 = ft_strjoin(test3, tmp3);
+		}
+		else
+			break ;
+	}
+	close(fd3);
+	free(test3);
+	return (0);
+}
 
-// /* 	i = 0;
-// 		while (i < 3)
-// 		{
-// 			i++;
-// 			char *tmp = get_next_line(0);
-// 			if (tmp)
-// 				test5 = ft_strjoin(test5, tmp);
-// 			else
-// 				break ;
-// 		} */
-// //__builtin_printf("sayedto: %s\n", test5);
+/* 	i = 0;
+		while (i < 3)
+		{
+			i++;
+			char *tmp = get_next_line(0);
+			if (tmp)
+				test5 = ft_strjoin(test5, tmp);
+			else
+				break ;
+		} */
+//__builtin_printf("sayedto: %s\n", test5);

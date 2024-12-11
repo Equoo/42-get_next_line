@@ -6,7 +6,7 @@
 /*   By: dderny <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 12:53:46 by dderny            #+#    #+#             */
-/*   Updated: 2024/12/07 14:20:43 by dderny           ###   ########.fr       */
+/*   Updated: 2024/12/11 14:55:58 by dderny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ char	*ft_strjoin(char *s1, char *s2)
 	if (!s1 || !s2)
 		return (NULL);
 	total = ft_strlen(s1) + ft_strlen(s2) + 1;
-	str = ft_calloc(total + 8, sizeof(char));
+	str = ft_calloc(total, sizeof(char));
 	if (!str)
 		return (free(s1), free(s2), NULL);
 	ft_strlcpy(str, s1, total);
@@ -101,7 +101,7 @@ size_t	ft_strlcat(char *dest, const char *src, size_t n)
 	return (destlen + srclen);
 }
 
-/* size_t	ft_strlen(const char *str)
+size_t	ft_strlen(const char *str)
 {
 	const char	*const_str;
 
@@ -111,9 +111,9 @@ size_t	ft_strlcat(char *dest, const char *src, size_t n)
 	while (*const_str != '\0')
 		++const_str;
 	return (const_str - str);
-} */
+}
 
-size_t	ft_strlen(const char *str)
+/* size_t	ft_strlen(const char *str)
 {
 	size_t	s_int;
 	size_t	*int_str;
@@ -136,4 +136,4 @@ size_t	ft_strlen(const char *str)
 		}
 	}
 	return ((const char *)int_str - str);
-}
+} */

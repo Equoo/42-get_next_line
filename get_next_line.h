@@ -6,7 +6,7 @@
 /*   By: dderny <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 12:25:43 by dderny            #+#    #+#             */
-/*   Updated: 2024/12/10 16:59:11 by dderny           ###   ########.fr       */
+/*   Updated: 2024/12/11 15:40:34 by dderny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,10 @@
 # include <stdint.h>
 # include <stdlib.h>
 # include <unistd.h>
+# include "malloc_bonus.h"
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 100
+#  define BUFFER_SIZE 10
 # endif
 # define MAX_FILES 128
 
@@ -42,7 +43,7 @@ typedef struct s_gnl_read
 
 typedef struct s_gnl_data
 {
-	char		buf[BUFFER_SIZE + 9];
+	char		buf[BUFFER_SIZE + 1];
 	size_t		pos;
 	t_gnl_state	state;
 	int			fd;
@@ -51,7 +52,8 @@ typedef struct s_gnl_data
 char			*get_next_line(int fd);
 
 char			*read_line(t_gnl_data *data, char *buffer);
-char			*read_until_newline(t_gnl_data *data, char *buffer, t_gnl_read *rdta);
+char			*read_until_newline(t_gnl_data *data, char *buffer,
+					t_gnl_read *rdta);
 char			*read_buffer(t_gnl_data *data);
 
 size_t			get_newline(char *str);
