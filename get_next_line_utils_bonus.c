@@ -6,7 +6,7 @@
 /*   By: dderny <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 12:53:46 by dderny            #+#    #+#             */
-/*   Updated: 2024/12/11 14:55:58 by dderny           ###   ########.fr       */
+/*   Updated: 2024/12/12 18:08:29 by dderny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,27 +14,16 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-void	*ft_calloc(size_t nmemb, size_t size)
+size_t	get_newline(char *str)
 {
 	size_t	i;
-	void	*array;
-	size_t	*intarray;
 
 	i = 0;
-	array = NULL;
-	if ((unsigned long long)nmemb * (unsigned long long)size > SIZE_MAX)
-		return (NULL);
-	array = malloc(nmemb * size);
-	if (array)
-	{
-		intarray = (size_t *)array;
-		while (i < (nmemb * size) / sizeof(i))
-			intarray[i++] = 0;
-		i = i * sizeof(i);
-		while (i < nmemb * size)
-			((char *)array)[i++] = 0;
-	}
-	return (array);
+	while (str[i] && (unsigned char)str[i] != '\n')
+		i++;
+	if ((unsigned char)str[i] != '\n')
+		return (0);
+	return (i);
 }
 
 char	*ft_strjoin(char *s1, char *s2)
@@ -45,7 +34,7 @@ char	*ft_strjoin(char *s1, char *s2)
 	if (!s1 || !s2)
 		return (NULL);
 	total = ft_strlen(s1) + ft_strlen(s2) + 1;
-	str = ft_calloc(total, sizeof(char));
+	str = malloc(sizeof(char) * total);
 	if (!str)
 		return (free(s1), free(s2), NULL);
 	ft_strlcpy(str, s1, total);
@@ -112,8 +101,8 @@ size_t	ft_strlen(const char *str)
 		++const_str;
 	return (const_str - str);
 }
-
-/* size_t	ft_strlen(const char *str)
+/* 
+size_t	ft_strlen(const char *str)
 {
 	size_t	s_int;
 	size_t	*int_str;

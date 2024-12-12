@@ -6,7 +6,7 @@
 /*   By: dderny <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 12:25:54 by dderny            #+#    #+#             */
-/*   Updated: 2024/12/11 15:29:39 by dderny           ###   ########.fr       */
+/*   Updated: 2024/12/12 18:52:10 by dderny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-t_gnl_data 	*getfddata(int fd)
+t_gnl_data	*getfddata(int fd)
 {
 	static t_gnl_data	data[MAX_FILES];
-	int	i;
+	int					i;
 
 	if (fd < 0)
 		return (NULL);
@@ -38,8 +38,8 @@ t_gnl_data 	*getfddata(int fd)
 
 char	*get_next_line(int fd)
 {
-	t_gnl_data			*data;
-	char				*line;
+	t_gnl_data	*data;
+	char		*line;
 
 	data = getfddata(fd);
 	if (!data)
@@ -57,7 +57,7 @@ char	*get_next_line(int fd)
 
 char	*read_line(t_gnl_data *data, char *buffer)
 {
-	t_gnl_read rdta;
+	t_gnl_read	rdta;
 
 	rdta = (t_gnl_read){.last = NULL};
 	if (buffer)
@@ -86,7 +86,7 @@ char	*read_until_newline(t_gnl_data *data, char *buffer, t_gnl_read *rdta)
 {
 	data->state = GNL_ENDED;
 	rdta->last = buffer;
-	buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buffer)
 	{
 		if (rdta->last)
@@ -96,12 +96,11 @@ char	*read_until_newline(t_gnl_data *data, char *buffer, t_gnl_read *rdta)
 	rdta->len = read(data->fd, buffer, BUFFER_SIZE);
 	if (!rdta->len)
 		return (free(buffer), rdta->last);
+	if (rdta->len == -1 && rdta->last)
+		free(rdta->last);
 	if (rdta->len == -1)
-	{
-		if (rdta->last)
-			free(rdta->last);
 		return (free(buffer), NULL);
-	}
+	buffer[rdta->len] = 0;
 	rdta->total += (size_t)rdta->len;
 	if (rdta->last)
 		buffer = ft_strjoin(rdta->last, buffer);
@@ -112,11 +111,10 @@ char	*read_until_newline(t_gnl_data *data, char *buffer, t_gnl_read *rdta)
 	return (buffer);
 }
 
-
 char	*read_buffer(t_gnl_data *data)
 {
-	t_gnl_read rdta;
-	char	*buffer;
+	t_gnl_read	rdta;
+	char		*buffer;
 
 	rdta = (t_gnl_read){.last = NULL};
 	buffer = NULL;
@@ -125,7 +123,7 @@ char	*read_buffer(t_gnl_data *data)
 	rdta.total = rdta.newline + 1;
 	if (!rdta.newline && rdta.last[0] != '\n')
 		rdta.total = ft_strlen(rdta.last);
-	buffer = ft_calloc(rdta.total + 1, sizeof(char));
+	buffer = malloc(sizeof(char) * (rdta.total + 1));
 	if (!buffer)
 		return (NULL);
 	ft_strlcpy(buffer, rdta.last, rdta.total + 1);
@@ -136,54 +134,42 @@ char	*read_buffer(t_gnl_data *data)
 	return (buffer);
 }
 
-size_t	get_newline(char *str)
-{
-	size_t	i;
+// #include <fcntl.h>
 
-	i = 0;
-	while (str[i] && (unsigned char)str[i] != '\n')
-		i++;
-	if ((unsigned char)str[i] != '\n')
-		return (0);
-	return (i);
-}
+// int	main(void)
+// {
+// 	char	*test3;
+// 	int		fd3;
+// 	int		i;
+// 	char	*tmp3;
 
-#include <fcntl.h>
-
-int	main(void)
-{
-	char	*test3;
-	int		fd3;
-	int		i;
-	char	*tmp3;
-
-	test3 = NULL;
-	// char *test5 = NULL;
-	test3 = ft_calloc(1, 1);
-	// test5 = ft_calloc(1, 1);
-	fd3 = open("1char.txt", O_RDONLY);
-	i = 0;
-	while (1)
-	{
-		i++;
-		tmp3 = get_next_line(fd3);
-		// if (tmp)
-		//	test1 = ft_strjoin(test1, tmp);
-		// if (tmp2)
-		//	test2 = ft_strjoin(test2, tmp2);
-		__builtin_printf("-%s", tmp3);
-		if (tmp3)
-		{
-			free(tmp3);
-			// test3 = ft_strjoin(test3, tmp3);
-		}
-		else
-			break ;
-	}
-	close(fd3);
-	free(test3);
-	return (0);
-}
+// 	test3 = NULL;
+// 	// char *test5 = NULL;
+// 	test3 = ft_calloc(1, 1);
+// 	// test5 = ft_calloc(1, 1);
+// 	fd3 = open("1char.txt", O_RDONLY);
+// 	i = 0;
+// 	while (1)
+// 	{
+// 		i++;
+// 		tmp3 = get_next_line(fd3);
+// 		// if (tmp)
+// 		//	test1 = ft_strjoin(test1, tmp);
+// 		// if (tmp2)
+// 		//	test2 = ft_strjoin(test2, tmp2);
+// 		__builtin_printf("-%s", tmp3);
+// 		if (tmp3)
+// 		{
+// 			free(tmp3);
+// 			// test3 = ft_strjoin(test3, tmp3);
+// 		}
+// 		else
+// 			break ;
+// 	}
+// 	close(fd3);
+// 	free(test3);
+// 	return (0);
+// }
 
 /* 	i = 0;
 		while (i < 3)
