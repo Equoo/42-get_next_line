@@ -6,7 +6,7 @@
 /*   By: dderny <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 12:25:54 by dderny            #+#    #+#             */
-/*   Updated: 2024/12/12 18:52:10 by dderny           ###   ########.fr       */
+/*   Updated: 2024/12/12 18:56:22 by dderny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,14 @@ char	*get_next_line(int fd)
 		return (NULL);
 	line = NULL;
 	if (data->state != GNL_ENDED && !data->buf[data->pos])
-		line = read_line(data, NULL);
+	{
+		line = malloc(sizeof(char));
+		if (line)
+		{
+			*line = 0;
+			line = read_line(data, line);
+		}
+	}
 	else if (data->state != GNL_ENDED)
 		line = read_buffer(data);
 	if (!line)
