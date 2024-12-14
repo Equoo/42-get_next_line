@@ -6,7 +6,7 @@
 /*   By: dderny <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 12:25:54 by dderny            #+#    #+#             */
-/*   Updated: 2024/12/12 18:56:22 by dderny           ###   ########.fr       */
+/*   Updated: 2024/12/14 16:46:23 by dderny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,26 +40,28 @@ char	*get_next_line(int fd)
 {
 	t_gnl_data	*data;
 	char		*line;
+	char		*line2;
 
 	data = getfddata(fd);
 	if (!data)
 		return (NULL);
 	line = NULL;
+	line2 = NULL;
 	if (data->state != GNL_ENDED && !data->buf[data->pos])
-	{
-		line = malloc(sizeof(char));
-		if (line)
-		{
-			*line = 0;
-			line = read_line(data, line);
-		}
-	}
+		line = read_line(data, NULL);
 	else if (data->state != GNL_ENDED)
 		line = read_buffer(data);
 	if (!line)
 		*data = (t_gnl_data){.state = GNL_UNUSED, .pos = 0, .fd = 0};
-	//__builtin_printf("\n'%s'\n", line);
-	return (line);
+	if (line)
+	{
+		line2 = malloc(ft_strlen(line) + 1);
+		if (!line2)
+			return (NULL);
+		ft_strlcpy(line2, line, ft_strlen(line) + 1);
+		free(line);
+	}
+	return (line2);
 }
 
 char	*read_line(t_gnl_data *data, char *buffer)
@@ -67,8 +69,8 @@ char	*read_line(t_gnl_data *data, char *buffer)
 	t_gnl_read	rdta;
 
 	rdta = (t_gnl_read){.last = NULL};
-	if (buffer)
-		rdta.total = ft_strlen(buffer);
+	//if (buffer)
+	//	rdta.total = ft_strlen(buffer);
 	data->state = GNL_INUSE;
 	while (data->state != GNL_ENDED && !rdta.newline && (!buffer || (buffer
 				&& buffer[0] != '\n')))
@@ -145,15 +147,10 @@ char	*read_buffer(t_gnl_data *data)
 
 // int	main(void)
 // {
-// 	char	*test3;
 // 	int		fd3;
 // 	int		i;
 // 	char	*tmp3;
 
-// 	test3 = NULL;
-// 	// char *test5 = NULL;
-// 	test3 = ft_calloc(1, 1);
-// 	// test5 = ft_calloc(1, 1);
 // 	fd3 = open("1char.txt", O_RDONLY);
 // 	i = 0;
 // 	while (1)
@@ -174,7 +171,6 @@ char	*read_buffer(t_gnl_data *data)
 // 			break ;
 // 	}
 // 	close(fd3);
-// 	free(test3);
 // 	return (0);
 // }
 

@@ -6,7 +6,7 @@
 /*   By: dderny <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 12:53:46 by dderny            #+#    #+#             */
-/*   Updated: 2024/12/12 18:08:29 by dderny           ###   ########.fr       */
+/*   Updated: 2024/12/13 09:54:46 by dderny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ char	*ft_strjoin(char *s1, char *s2)
 	str = malloc(sizeof(char) * total);
 	if (!str)
 		return (free(s1), free(s2), NULL);
+	str[0] = 0;
 	ft_strlcpy(str, s1, total);
 	ft_strlcat(str, s2, total);
 	free(s1);
